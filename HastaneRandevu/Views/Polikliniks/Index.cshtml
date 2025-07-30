@@ -1,46 +1,100 @@
 ﻿@model IEnumerable<HastaneRandevu.Models.Poliklinik>
 <style>
     body {
-        background-color: #ffff;
+        background-color: #f8f9fa; 
     }
 
     .container {
-        background: #d0e7ff;
+        background: #d0e7ff; 
         padding: 30px;
         border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
+
+    h1.mb-3 {
+        text-align: center;
+        color: #007bff; 
+    }
+
+   
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #f0f8ff; 
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-top: 1px solid #ddd; 
+        }
+
+     
+        .table th {
+            background-color: #007bff; 
+            color: white;
+        }
+
+        
+        .table tr:hover {
+            background-color: #e6f7f2; 
+        }
+
+        
+        .table tr:nth-child(even) {
+            background-color: #eaf7; 
+        }
+
+       
+        .table a {
+            color: #007bff; 
+            text-decoration: none;
+        }
+
+            .table a:hover {
+                text-decoration: underline;
+            }
 </style>
+
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="container">
+    <h1 class="mb-3">Poliklinikler</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PoliklinikAdi)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PoliklinikAdi)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+  
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.PoliklinikAdi)
+                </th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PoliklinikAdi)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+ 
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+</div>
+

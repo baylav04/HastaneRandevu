@@ -1,4 +1,8 @@
 ﻿@model HastaneRandevu.Models.Hasta
+@{
+    ViewData["Title"] = "Hasta Giriş";
+}
+
 <style>
     body {
         background-color: #f0f2f5;
@@ -11,9 +15,6 @@
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 </style>
-@{
-    ViewData["Title"] = "Hasta Giriş";
-}
 
 <div class="container mt-5" style="max-width: 400px;">
     <h2 class="mb-4 text-center">Hasta Giriş</h2>
@@ -27,15 +28,35 @@
 
     <form asp-action="Login" method="post">
         <div class="mb-3">
-            <label asp-for="KullaniciAdi" class="form-label"></label>
+            <label asp-for="KullaniciAdi" class="form-label">Kullanıcı Adı</label>
             <input asp-for="KullaniciAdi" class="form-control" placeholder="Kullanıcı Adı" />
             <span asp-validation-for="KullaniciAdi" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="TCKimlikNo" class="form-label"></label>
+            <label asp-for="TCKimlikNo" class="form-label">TC Kimlik No</label>
             <input asp-for="TCKimlikNo" class="form-control" placeholder="TC Kimlik No" />
             <span asp-validation-for="TCKimlikNo" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
     </form>
+
+    <div class="text-center mt-2">
+        <a href="/Hastas/SifremiUnuttum">Şifremi Unuttum?</a>
+    </div>
+
+    <div class="text-center my-3">- VEYA -</div>
+    <div class="d-grid gap-2 mb-2">
+        <button class="btn" type="button" style="background-color: #e11a22; color: #fff; font-weight:600;">
+            <img src="~/images/png.png" alt="e-Devlet" style="height:24px; margin-right:8px; vertical-align:middle;" />
+            e-Devlet ile Giriş Yap
+        </button>
+    </div>
 </div>
+
+<footer class="text-center mt-4 text-muted">
+    <small>
+        Copyright &copy; 20004-2025&nbsp;
+        <a href="https://adminlte.io" class="text-decoration-none">X Hastanesi</a>.
+        Tüm hakları saklıdır.
+    </small>
+</footer>

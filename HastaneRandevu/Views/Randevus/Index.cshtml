@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<HastaneRandevu.Models.Randevu>
+
 <style>
     body {
-        background-color: #ffff;
+        background-color: #ffffff;
     }
 
     .container {
@@ -10,55 +11,61 @@
         border-radius: 10px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
+
+    .card {
+        margin-bottom: 20px;
+    }
 </style>
+
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+
+<h1 class="mb-3">Randevular</h1>
+
+<div class="row Randevular">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Yaklaşan Randevular</h5>
+                <p class="card-text">Hastaların, doktorların ve polikliniklerin bilgilerini içeren yaklaşan randevuları görüntüleyebilirsiniz.</p>
+                <a href="#" class="card-link">Detayları Görüntüle</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Poliklinik)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Doktor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Hasta)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RandevuSaati)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Poliklinik.PoliklinikAdi)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Doktor.Ad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Hasta.AdSoyadi)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RandevuSaati)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="container">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Poliklinik)</th>
+                <th>@Html.DisplayNameFor(model => model.Doktor)</th>
+                <th>@Html.DisplayNameFor(model => model.Hasta)</th>
+                <th>@Html.DisplayNameFor(model => model.RandevuSaati)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Poliklinik.PoliklinikAdi)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Doktor.Ad)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Hasta.AdSoyadi)</td>
+                    <td>@Html.DisplayFor(modelItem => item.RandevuSaati)</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

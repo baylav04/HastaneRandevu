@@ -18,8 +18,12 @@ namespace HastaneRandevu.Controllers
         {
             _context = context;
         }
-       
 
+        [HttpGet]
+        public IActionResult SifremiUnuttum()
+        {
+            return View();
+        }
         // GET: Hastas
         public async Task<IActionResult> Index()
         {
