@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    body {
+        background-color: #ffffff;
+    }
+
+    .container {
+        background: #d0e7ff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+</style>
+
+<div class="container text-center mt-5">
+    <h1 class="display-4">Hoş Geldiniz!</h1>
+    <p>Devam etmek için aşağıdan giriş yapınız.</p>
+
+    <a class="btn btn-primary btn-lg" asp-controller="Hastas" asp-action="Login">
+        Hasta Girişi
+    </a>
+
+    <hr />
+
+    <div class="alert alert-warning mt-4">
+        ⚠️ <strong>Grip mevsimi başladı:</strong> Lütfen maskenizi takın ve kalabalık ortamlardan kaçının.
+    </div>
+</div>
+

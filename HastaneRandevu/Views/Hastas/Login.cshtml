@@ -1,0 +1,41 @@
+﻿@model HastaneRandevu.Models.Hasta
+<style>
+    body {
+        background-color: #f0f2f5;
+    }
+
+    .container {
+        background: #d0e7ff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+</style>
+@{
+    ViewData["Title"] = "Hasta Giriş";
+}
+
+<div class="container mt-5" style="max-width: 400px;">
+    <h2 class="mb-4 text-center">Hasta Giriş</h2>
+
+    @if (ViewData["LoginError"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewData["LoginError"]
+        </div>
+    }
+
+    <form asp-action="Login" method="post">
+        <div class="mb-3">
+            <label asp-for="KullaniciAdi" class="form-label"></label>
+            <input asp-for="KullaniciAdi" class="form-control" placeholder="Kullanıcı Adı" />
+            <span asp-validation-for="KullaniciAdi" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="TCKimlikNo" class="form-label"></label>
+            <input asp-for="TCKimlikNo" class="form-control" placeholder="TC Kimlik No" />
+            <span asp-validation-for="TCKimlikNo" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+    </form>
+</div>

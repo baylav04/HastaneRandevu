@@ -1,0 +1,38 @@
+﻿@model IEnumerable<HastaneRandevu.Models.Randevu>
+<style>
+    body {
+        background-color: #ffff;
+    }
+
+    .container {
+        background: #d0e7ff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+</style>
+@{
+    ViewData["Title"] = "Hasta Randevuları";
+}
+
+<h2>Randevularım</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Poliklinik</th>
+            <th>Doktor</th>
+            <th>Randevu Saati</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Poliklinik.PoliklinikAdi</td>
+                <td>@item.Doktor.Ad</td>
+                <td>@item.RandevuSaati.ToString("g")</td>
+            </tr>
+        }
+    </tbody>
+</table>

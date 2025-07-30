@@ -1,0 +1,56 @@
+﻿@model HastaneRandevu.Models.Randevu
+<style>
+    body {
+        background-color: #ffff;
+    }
+
+    .container {
+        background: #d0e7ff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+</style>
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Randevu</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PoliklinikId" class="control-label"></label>
+                <select asp-for="PoliklinikId" class ="form-control" asp-items="ViewBag.PoliklinikId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="DoktorId" class="control-label"></label>
+                <select asp-for="DoktorId" class ="form-control" asp-items="ViewBag.DoktorId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="HastaId" class="control-label"></label>
+                <select asp-for="HastaId" class ="form-control" asp-items="ViewBag.HastaId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="RandevuSaati" class="control-label"></label>
+                <input asp-for="RandevuSaati" class="form-control" />
+                <span asp-validation-for="RandevuSaati" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
