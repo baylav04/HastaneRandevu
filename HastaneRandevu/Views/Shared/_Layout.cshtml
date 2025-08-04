@@ -8,15 +8,59 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HastaneRandevu.styles.css" asp-append-version="true" />
+
+    <style>
+        /* Sayfa genel arka planı - kahve */
+        body {
+        background: #b7986b; /* Koyu kahve */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        }
+
+        /* Navbar ve footer koyu krem arka plan */
+        .navbar {
+            background-color: #f5e6c8 !important; /* Koyu krem */
+            color: #3e2f1c;
+        }
+
+        footer.border-top.footer.text-muted {
+            background-color: #f5e6c8 !important; /* Koyu krem */
+            color: #3e2f1c;
+            padding: 10px 0;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Navbar link renkleri */
+        .navbar .nav-link,
+        .navbar .navbar-brand {
+            color: #3e2f1c !important; /* Koyu kahverengi ton */
+            font-weight: 600;
+        }
+
+        .navbar .nav-link:hover,
+        .navbar .navbar-brand:hover {
+            color: #5a4420 !important;
+            text-decoration: underline;
+        }
+
+        /* Footer stil */
+        footer.border-top.footer.text-muted {
+            padding: 10px 0;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="@Url.Content("~/images/logo.png.png")" alt="Logo" style="height: 40px; margin-right: 10px;" />
                     HastaneRandevu
-                </a> 
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -54,7 +98,7 @@
             &copy; 2025 - HastaneRandevu - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-  
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

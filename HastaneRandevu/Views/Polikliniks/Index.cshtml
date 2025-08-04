@@ -1,11 +1,14 @@
 ﻿@model IEnumerable<HastaneRandevu.Models.Poliklinik>
 <style>
     body {
-        background-color: #f8f9fa; 
+        background: #b7986b; /* Koyu kahve */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
     }
 
     .container {
-        background: #d0e7ff; 
+        background: #f5e6c8; /* Koyu krem */
         padding: 30px;
         border-radius: 10px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -13,49 +16,50 @@
 
     h1.mb-3 {
         text-align: center;
-        color: #007bff; 
+        color: #3e2f1c; /* Koyu kahverengi */
     }
 
-   
     .table {
         width: 100%;
         border-collapse: collapse;
-        background-color: #f0f8ff; 
+        background-color: #f5e6c8; /* Koyu krem */
         border-radius: 8px;
         overflow: hidden;
     }
 
-        .table th, .table td {
-            padding: 12px;
-            text-align: left;
-            border-top: 1px solid #ddd; 
-        }
+    .table th, .table td {
+        padding: 12px;
+        text-align: left;
+        border-top: 1px solid #b7986b; /* Koyu kahve */
+    }
 
-     
-        .table th {
-            background-color: #007bff; 
-            color: white;
-        }
+    .table th {
+        background-color: #b7986b; /* Koyu kahve başlık */
+        color: #3e2f1c; /* Koyu kahverengi yazı */
+    }
 
-        
-        .table tr:hover {
-            background-color: #e6f7f2; 
-        }
+    .table tr:hover {
+        background-color: #ecd9b0; /* Açık krem hover */
+    }
 
-        
-        .table tr:nth-child(even) {
-            background-color: #eaf7; 
-        }
+    .table tr:nth-child(even) {
+        background-color: #f5e6c8; /* Koyu krem */
+    }
 
-       
-        .table a {
-            color: #007bff; 
-            text-decoration: none;
-        }
+    .table tr:nth-child(odd) {
+        background-color: #fffbe6; /* Daha açık krem */
+    }
 
-            .table a:hover {
-                text-decoration: underline;
-            }
+    .table a {
+        color: #3e2f1c; /* Koyu kahverengi */
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .table a:hover {
+        text-decoration: underline;
+        color: #5a4420;
+    }
 </style>
 
 @{
@@ -83,9 +87,9 @@
                         @Html.DisplayFor(modelItem => item.PoliklinikAdi)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Düzenle</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Detay</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Sil</a>
                     </td>
                 </tr>
             }

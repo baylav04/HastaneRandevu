@@ -1,22 +1,38 @@
-using HastaneRandevu.Data;
+﻿using HastaneRandevu.Data;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using AutoMapper; // 🔹 Bunu da eklemeyi unutma!
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException(nameof(args));
+// 🔹 Veritabanı bağlantısı
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                      ?? throw new ArgumentNullException(nameof(args));
 builder.Services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
 
-// Add services to the container.
+// 🔹 AutoMapper'ı tanıt
+builder.Services.AddAutoMapper(typeof(Program));
+
+// 🔹 Controller ve View'lar
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 🔹 Hata ayıklama ve HSTS ayarı
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+else
+{
+    // Veritabanı başlatma işlemi
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<Context>();
+        InitializeDatabase.Initialize(dbContext);
+    }
 }
 
 app.UseHttpsRedirection();
@@ -26,8 +42,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// 🔹 Default Route
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HastaneRandevu.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250729075519_TcKimlikNoEkleme")]
-    partial class TcKimlikNoEkleme
+    [Migration("20250804124721_yeni")]
+    partial class yeni
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,7 +59,7 @@ namespace HastaneRandevu.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("KullaniciAdi")
+                    b.Property<string>("Parola")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

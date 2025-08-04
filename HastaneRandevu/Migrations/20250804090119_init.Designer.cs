@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HastaneRandevu.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250729045448_Init")]
-    partial class Init
+    [Migration("20250804090119_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,10 +60,13 @@ namespace HastaneRandevu.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KullaniciAdi")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Sifre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TCKimlikNo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

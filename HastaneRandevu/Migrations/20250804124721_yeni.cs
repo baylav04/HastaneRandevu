@@ -5,24 +5,34 @@
 namespace HastaneRandevu.Migrations
 {
     /// <inheritdoc />
-    public partial class TcKimlikNoEkleme : Migration
+    public partial class yeni : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "KullaniciAdi",
+                table: "Hastalar");
+
             migrationBuilder.RenameColumn(
                 name: "Sifre",
                 table: "Hastalar",
-                newName: "TCKimlikNo");
+                newName: "Parola");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "TCKimlikNo",
+                name: "Parola",
                 table: "Hastalar",
                 newName: "Sifre");
+
+            migrationBuilder.AddColumn<string>(
+                name: "KullaniciAdi",
+                table: "Hastalar",
+                type: "nvarchar(max)",
+                nullable: true);
         }
     }
 }

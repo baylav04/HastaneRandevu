@@ -26,14 +26,14 @@ namespace HastaneRandevu.Controllers
         public async Task<IActionResult> Index(Hasta hasta)
         {
             var girisYapan = await _context.Hastalar
-                .FirstOrDefaultAsync(h => h.KullaniciAdi == hasta.KullaniciAdi && h.TCKimlikNo == hasta.TCKimlikNo);
+                .FirstOrDefaultAsync(h => h.Parola == hasta.Parola && h.TCKimlikNo == hasta.TCKimlikNo);
 
             if (girisYapan != null)
             {
                 return RedirectToAction("Index", "Doktors");
             }
 
-            ViewBag.Hata = "Kullanıcı adı veya TC Kimlik No hatalı.";
+            ViewBag.Hata = "Parola veya TC Kimlik No hatalı.";
             return View();
         }
         public IActionResult Login()

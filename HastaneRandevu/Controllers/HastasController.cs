@@ -1,21 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using HastaneRandevu.Data;
+using HastaneRandevu.DTOs;
+using HastaneRandevu.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using HastaneRandevu.Data;
-using HastaneRandevu.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HastaneRandevu.Controllers
 {
     public class HastasController : Controller
     {
+        private readonly IMapper _mapper;
         private readonly Context _context;
 
-        public HastasController(Context context)
+        public HastasController(IMapper mapper, Context context)
         {
+            _mapper = mapper;
             _context = context;
         }
 
@@ -31,21 +35,22 @@ namespace HastaneRandevu.Controllers
         }
 
         // GET: Hastas/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Profil(int? id)
         {
             if (id == null)
-            {
-                return NotFound();
-            }
+                return NotFound(); // URL'de ID yoksa 404 döner
 
-            var hasta = await _context.Hastalar
-                .FirstOrDefaultAsync(m => m.Id == id);
+            // Veritabanından hasta bilgisi çek
+            var hasta = await _context.Hastalar.FindAsync(id);
+
             if (hasta == null)
-            {
-                return NotFound();
-            }
+                return NotFound(); // ID'ye karşılık hasta yoksa 404 döner
 
-            return View(hasta);
+            // Model → DTO dönüşümü yap
+            var dto = _mapper.Map<HastaDTO>(hasta);
+
+            // View sayfasına DTO'yu gönder
+            return View(dto);
         }
 
         // GET: Hastas/Create
@@ -59,7 +64,7 @@ namespace HastaneRandevu.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AdSoyadi,KullaniciAdi,TCKimlikNo")] Hasta hasta)
+        public async Task<IActionResult> Create([Bind("Id,AdSoyadi,Parola,TCKimlikNo")] Hasta hasta)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +96,7 @@ namespace HastaneRandevu.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AdSoyadi,KullaniciAdi,TCKimlikNo")] Hasta hasta)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AdSoyadi,Parola,TCKimlikNo")] Hasta hasta)
         {
             if (id != hasta.Id)
             {
@@ -156,18 +161,18 @@ namespace HastaneRandevu.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(Hasta model)
         {
-            if (string.IsNullOrWhiteSpace(model.KullaniciAdi) || string.IsNullOrWhiteSpace(model.TCKimlikNo))
+            if (string.IsNullOrWhiteSpace(model.Parola) || string.IsNullOrWhiteSpace(model.TCKimlikNo))
             {
                 ViewData["LoginError"] = "Lütfen tüm alanları doldurun.";
                 return View(model);
             }
 
             var hasta = await _context.Hastalar
-                .FirstOrDefaultAsync(h => h.KullaniciAdi == model.KullaniciAdi && h.TCKimlikNo == model.TCKimlikNo);
+                .FirstOrDefaultAsync(h => h.Parola == model.Parola && h.TCKimlikNo == model.TCKimlikNo);
 
             if (hasta == null)
             {
-                ViewData["LoginError"] = "Kullanıcı adı veya TC Kimlik No hatalı.";
+                ViewData["LoginError"] = "Parola veya TC Kimlik No hatalı.";
                 return View(model);
             }
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HastaneRandevu.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,8 @@ namespace HastaneRandevu.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AdSoyadi = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    KullaniciAdi = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    KullaniciAdi = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TCKimlikNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Sifre = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>

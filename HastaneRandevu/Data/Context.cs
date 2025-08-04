@@ -31,6 +31,5 @@ namespace HastaneRandevu.Data
         public DbSet<Randevu> Randevular { get; set; }
         public DbSet<Doktor> Doktorlar { get; set; }
         public DbSet<Hasta> Hastalar { get; set; }
-
     }
 }

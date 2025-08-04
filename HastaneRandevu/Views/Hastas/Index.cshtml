@@ -1,14 +1,65 @@
 ﻿@model IEnumerable<HastaneRandevu.Models.Hasta>
 <style>
     body {
-        background-color: #ffff;
+        background: #b7986b; /* Koyu kahve */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
     }
 
     .container {
-        background: #d0e7ff;
+        background: #f5e6c8;
         padding: 30px;
         border-radius: 10px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #f5e6c8; /* Koyu krem */
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .table th, .table td {
+        padding: 12px;
+        text-align: left;
+        border-top: 1px solid #b7986b; /* Koyu kahve */
+    }
+
+    .table th {
+        background-color: #b7986b; /* Koyu kahve başlık */
+        color: #3e2f1c; /* Koyu kahverengi yazı */
+        font-weight: 600;
+    }
+
+    .table tr:nth-child(even) {
+        background-color: #f5e6c8; /* Koyu krem */
+    }
+
+    .table tr:nth-child(odd) {
+        background-color: #fffbe6; /* Açık krem */
+    }
+
+    .table tr:hover {
+        background-color: #ecd9b0; /* Hover: daha açık krem */
+    }
+
+    .table a {
+        color: #3e2f1c; /* Koyu kahverengi */
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .table a:hover {
+        text-decoration: underline;
+        color: #5a4420;
+    }
+
+    h1 {
+        color: #3e2f1c;
+        text-align: center;
     }
 </style>
 @{
@@ -24,7 +75,7 @@
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.AdSoyadi)</th>
-            <th>@Html.DisplayNameFor(model => model.KullaniciAdi)</th>
+            <th>@Html.DisplayNameFor(model => model.Parola)</th>
             <th>@Html.DisplayNameFor(model => model.TCKimlikNo)</th>
             <th></th>
         </tr>
@@ -34,7 +85,7 @@
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.AdSoyadi)</td>
-                <td>@Html.DisplayFor(modelItem => item.KullaniciAdi)</td>
+                <td>@Html.DisplayFor(modelItem => item.Parola)</td>
                 <td>@Html.DisplayFor(modelItem => item.TCKimlikNo)</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Düzenle</a> |
