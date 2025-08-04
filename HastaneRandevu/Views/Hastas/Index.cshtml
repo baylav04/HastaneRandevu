@@ -14,85 +14,88 @@
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        background-color: #f5e6c8; /* Koyu krem */
-        border-radius: 8px;
-        overflow: hidden;
+    .patient-profile {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    .table th, .table td {
-        padding: 12px;
-        text-align: left;
-        border-top: 1px solid #b7986b; /* Koyu kahve */
+    .profile-header {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
     }
 
-    .table th {
-        background-color: #b7986b; /* Koyu kahve başlık */
-        color: #3e2f1c; /* Koyu kahverengi yazı */
-        font-weight: 600;
+    .profile-header h2 {
+        color: #3e2f1c;
+        margin: 0;
     }
 
-    .table tr:nth-child(even) {
-        background-color: #f5e6c8; /* Koyu krem */
+    .profile-item {
+        margin-bottom: 10px;
     }
 
-    .table tr:nth-child(odd) {
-        background-color: #fffbe6; /* Açık krem */
-    }
-
-    .table tr:hover {
-        background-color: #ecd9b0; /* Hover: daha açık krem */
-    }
-
-    .table a {
-        color: #3e2f1c; /* Koyu kahverengi */
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    .table a:hover {
-        text-decoration: underline;
+    .profile-label {
+        font-weight: bold;
         color: #5a4420;
+    }
+
+    .action-buttons {
+        margin-top: 20px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        border-radius: 5px;
+        text-decoration: none;
+        display: inline-block;
+        margin-right: 10px;
+        font-weight: 600;
+    }
+
+    .btn-edit {
+        background-color: #0288d1;
+        color: white;
+    }
+
+    .btn-delete {
+        background-color: #d32f2f;
+        color: white;
     }
 
     h1 {
         color: #3e2f1c;
         text-align: center;
+        margin-bottom: 30px;
     }
 </style>
 @{
-    ViewData["Title"] = "Hasta Listesi";
+    ViewData["Title"] = "Hasta Bilgilerim";
 }
 
-<h1>Hasta Listesi</h1>
+<h1>Hasta Bilgilerim</h1>
 
-<p>
-    <a asp-action="Create">Yeni Hasta Ekle</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.AdSoyadi)</th>
-            <th>@Html.DisplayNameFor(model => model.Parola)</th>
-            <th>@Html.DisplayNameFor(model => model.TCKimlikNo)</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.AdSoyadi)</td>
-                <td>@Html.DisplayFor(modelItem => item.Parola)</td>
-                <td>@Html.DisplayFor(modelItem => item.TCKimlikNo)</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Düzenle</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Detay</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Sil</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@foreach (var item in Model)
+{
+    <div class="patient-profile">
+        <div class="profile-header">
+            <h2>@item.AdSoyadi</h2>
+        </div>
+        
+        <div class="profile-item">
+            <span class="profile-label">TC Kimlik No:</span> 
+            <span>@item.TCKimlikNo</span>
+        </div>
+        
+        <div class="action-buttons">
+            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-edit">Bilgilerimi Düzenle</a>
+            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-delete">Hesabımı Sil</a>
+        </div>
+    </div>
+}
+
+<div>
+    <a asp-controller="Home" asp-action="Index" class="btn" style="background-color: #78909c; color: white;">Ana Sayfaya Dön</a>
+</div>

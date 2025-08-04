@@ -1,5 +1,7 @@
 html {
   font-size: 14px;
+  position: relative;
+  min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -12,11 +14,150 @@ html {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
   margin-bottom: 60px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Styles for both layouts */
+body.logged-in {
+  background: #b7986b; /* Koyu kahve */
+  margin: 0;
+  padding: 0;
+}
+
+/* Navbar styling */
+.navbar {
+  background-color: #f5e6c8 !important; /* Koyu krem */
+  color: #3e2f1c;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  color: #3e2f1c !important;
+  font-weight: 600;
+}
+
+.nav-link {
+  color: #3e2f1c !important;
+  font-weight: 500;
+}
+
+.navbar .nav-link:hover,
+.navbar .navbar-brand:hover {
+  color: #5a4420 !important;
+  text-decoration: underline;
+}
+
+/* Footer styling */
+footer.border-top.footer.text-muted {
+  background-color: #f5e6c8 !important; /* Koyu krem */
+  color: #3e2f1c;
+  padding: 10px 0;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* User info styling */
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #3e2f1c;
+  color: #f5e6c8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+/* Login page specific styles */
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.left-panel {
+  flex: 1;
+  background-color: #f5e6c8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.right-panel {
+  flex: 1;
+  position: relative;
+  background: url('https://www.mhrs.gov.tr/Vatandas/assets/img/neyimvar-bg.webp') no-repeat center center;
+  background-size: cover;
+}
+
+.custom-card {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  max-width: 450px;
+}
+
+.right-overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.right-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  z-index: 10;
+  width: 80%;
+}
+
+.right-content h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.right-content p {
+  font-size: 1.2rem;
+}
+
+/* Button styles */
+.btn-login, .btn-update {
+  background-color: #0277bd;
+  color: white;
+  font-weight: 600;
+}
+
+.btn-login:hover, .btn-update:hover {
+  background-color: #015b8e;
+  color: white;
+}
+
+.btn-edevlet {
+  background-color: #e11a22;
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-edevlet:hover {
+  background-color: #c41016;
+  color: #fff;
 }

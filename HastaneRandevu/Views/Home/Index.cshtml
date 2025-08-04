@@ -59,16 +59,39 @@
         margin-top: 30px;
         font-size: 1em;
     }
+    
+    .info-alert {
+        background-color: #cce5ff;
+        color: #004085;
+        border: 1px solid #b8daff;
+    }
 </style>
 
 <div class="container-orta">
     <div class="kutu">
         <h1 class="display-4">Hoş Geldiniz!</h1>
-        <p>Devam etmek için aşağıdan giriş yapınız.</p>
-
-        <a class="btn btn-primary btn-lg" asp-controller="Hastas" asp-action="Login">
-            Hasta Girişi
-        </a>
+        
+        @if (Context.Session.GetInt32("LoggedInHastaId") != null)
+        {
+            <p>Merhaba, <strong>@Context.Session.GetString("LoggedInHastaName")</strong>!</p>
+            <p>Randevu almak için aşağıdaki düğmeyi kullanabilirsiniz.</p>
+            
+            <a class="btn btn-primary btn-lg" asp-controller="Randevus" asp-action="Create">
+                Randevu Al
+            </a>
+        }
+        else
+        {
+            <p>Randevu almak için lütfen önce giriş yapın.</p>
+            
+            <a class="btn btn-primary btn-lg" asp-controller="Hastas" asp-action="Login">
+                Hasta Girişi
+            </a>
+            
+            <div class="alert mt-4" style="background-color: #cce5ff; color: #004085; border: 1px solid #b8daff;">
+                <strong>Önemli:</strong> Randevu alabilmek için sisteme giriş yapmanız gerekmektedir.
+            </div>
+        }
 
         <div class="alert mt-4">
             ⚠️ <strong>Grip mevsimi başladı:</strong> Lütfen maskenizi takın ve kalabalık ortamlardan kaçının.

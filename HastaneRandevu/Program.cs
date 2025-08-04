@@ -14,6 +14,15 @@ builder.Services.AddDbContext<Context>(options => options.UseSqlServer(connectio
 // 🔹 AutoMapper'ı tanıt
 builder.Services.AddAutoMapper(typeof(Program));
 
+// 🔹 Session'ı etkinleştir
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 // 🔹 Controller ve View'lar
 builder.Services.AddControllersWithViews();
 
@@ -41,6 +50,9 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+// 🔹 Session'ı kullan
+app.UseSession();
 
 // 🔹 Default Route
 app.MapControllerRoute(

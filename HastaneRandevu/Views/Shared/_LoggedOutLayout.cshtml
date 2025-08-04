@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>@ViewData["Title"] - HastaneRandevu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/HastaneRandevu.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="~/images/logo.png.png" alt="Logo" style="height: 40px; margin-right: 10px;">
+                HastaneRandevu
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Doktors">Doktorlar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Polikliniks">Poliklinikler</a>
+                    </li>
+                </ul>
+                <div class="ms-auto">
+                    <a href="/Hastas/Login" class="btn btn-sm btn-outline-primary me-2">Giriþ Yap</a>
+                    <a href="/Hastas/Create" class="btn btn-sm btn-primary">Kayýt Ol</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Split Screen -->
+    <div class="login-container">
+        <!-- Sol Panel -->
+        <div class="left-panel">
+            <div class="custom-card">
+                @RenderBody()
+            </div>
+        </div>
+
+        <!-- Sað Panel -->
+        <div class="right-panel d-none d-md-block">
+            <div class="right-overlay"></div>
+            <div class="right-content">
+                @if (ViewData["RightPanelTitle"] != null)
+                {
+                    <h1>@ViewData["RightPanelTitle"]</h1>
+                }
+                
+                @if (ViewData["RightPanelContent"] != null)
+                {
+                    <p>@ViewData["RightPanelContent"]</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // JavaScript to handle responsive layout
+        function handleResponsive() {
+            if (window.innerWidth <= 768) {
+                document.querySelector('.right-panel').style.display = 'none';
+                document.querySelector('.left-panel').style.height = '100%';
+                document.querySelector('.login-container').style.flexDirection = 'column';
+            } else {
+                document.querySelector('.right-panel').style.display = 'block';
+                document.querySelector('.login-container').style.flexDirection = 'row';
+            }
+        }
+
+        // Run on page load and window resize
+        window.addEventListener('load', handleResponsive);
+        window.addEventListener('resize', handleResponsive);
+    </script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
