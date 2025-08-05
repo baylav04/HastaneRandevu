@@ -80,7 +80,19 @@ namespace HastaneRandevu.Controllers
 
             return View(randevu);
         }
+        [HttpGet]
+        public JsonResult DoktorGetir(int poliklinikId)
+        {
+            var doktorlar = _context.Doktorlar
+                .Where(d => d.PoliklinikId == poliklinikId)
+                .Select(d => new {
+                    d.Id,
+                    d.Ad
+                })
+                .ToList();
 
+            return Json(doktorlar);
+        }
         // GET: Randevus/Create
         [HastaAuthorize]
         public IActionResult Create()
@@ -256,3 +268,4 @@ namespace HastaneRandevu.Controllers
         }
     }
 }
+

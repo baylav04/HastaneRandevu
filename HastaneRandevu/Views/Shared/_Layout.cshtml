@@ -14,7 +14,7 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="@Url.Content("~/images/logo.png.png")" alt="Logo" style="height: 40px; margin-right: 10px;" />
+                    <img src="@Url.Content("~/images/saglik.png")" alt="Logo" style="height: 60px; margin-right: 20px;" />
                     HastaneRandevu
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -47,9 +47,9 @@
                         @if (Context.Session.GetInt32("LoggedInHastaId") != null)
                         {
                             <div class="user-info me-3">
-                                <div class="avatar">
+                                @* <div class="avatar">
                                     @(Context.Session.GetString("LoggedInHastaName")?.Substring(0, 1).ToUpper())
-                                </div>
+                                </div> *@
                                 <span>@Context.Session.GetString("LoggedInHastaName")</span>
                             </div>
                             <a class="btn btn-outline-secondary btn-sm" asp-controller="Hastas" asp-action="Logout">Çıkış Yap</a>
@@ -70,11 +70,11 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+   @*  <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2025 - HastaneRandevu - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </footer>
+    </footer> *@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

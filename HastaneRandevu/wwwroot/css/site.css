@@ -1,163 +1,206 @@
+/ /* HTML ve BODY temel ayar */
 html {
-  font-size: 14px;
-  position: relative;
-  min-height: 100%;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.user-info {
+    display: flex;
+    align-items: center;
 }
-
 body {
-  margin-bottom: 60px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-bottom: 60px;
+    background-color: #F9F9F9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Styles for both layouts */
-body.logged-in {
-  background: #b7986b; /* Koyu kahve */
-  margin: 0;
-  padding: 0;
-}
+    body.logged-in {
+        background-color: #F9F9F9;
+        margin: 0;
+        padding: 0;
+    }
 
-/* Navbar styling */
+/* Navbar */
 .navbar {
-  background-color: #f5e6c8 !important; /* Koyu krem */
-  color: #3e2f1c;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: white !important;
+    color: #333333;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-.navbar-brand {
-  color: #3e2f1c !important;
-  font-weight: 600;
-}
-
+.navbar-brand,
 .nav-link {
-  color: #3e2f1c !important;
-  font-weight: 500;
+    color: #333333 !important;
+    font-weight: 500;
 }
 
 .navbar .nav-link:hover,
 .navbar .navbar-brand:hover {
-  color: #5a4420 !important;
-  text-decoration: underline;
+    color: #4A90E2 !important;
+    text-decoration: underline;
 }
 
-/* Footer styling */
+/* Footer */
 footer.border-top.footer.text-muted {
-  background-color: #f5e6c8 !important; /* Koyu krem */
-  color: #3e2f1c;
-  padding: 10px 0;
-  text-align: center;
-  margin-top: 20px;
+    background-color: white !important;
+    color: #A3A3A3;
+    padding: 10px 0;
+    text-align: center;
+    margin-top: 20px;
 }
 
-/* User info styling */
-.user-info {
-  display: flex;
-  align-items: center;
+/* Tüm mavi butonlar */
+.btn {
+    background-color: #007BFF;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    padding: 0.4rem 1.2rem;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    text-align: center;
 }
 
-.user-info .avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #3e2f1c;
-  color: #f5e6c8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 8px;
-  font-weight: bold;
+    .btn:hover,
+    .btn:focus,
+    .btn:active,
+    .btn:active:focus {
+        background-color: #0056b3;
+        color: #fff;
+        outline: none;
+        text-decoration: none;
+    }
+
+/* e-Devlet özel buton */
+.btn-edevlet {
+    background-color: #e11a22;
+    color: #fff;
 }
 
-/* Login page specific styles */
-.login-container {
-  display: flex;
-  height: 100vh;
-  width: 100%;
+    .btn-edevlet:hover {
+        background-color: #c41016;
+        color: #fff;
+    }
+
+/* Giriþ formu kutularý */
+input, select, textarea, .form-control {
+    border: 1px solid #A3A3A3;
+    border-radius: 4px;
+    padding: 8px;
+    width: 100%;
+    background-color: white;
+    color: #333333;
 }
 
+/* Login Panel */
 .left-panel {
-  flex: 1;
-  background-color: #f5e6c8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+    flex: 1;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
 .right-panel {
-  flex: 1;
-  position: relative;
-  background: url('https://www.mhrs.gov.tr/Vatandas/assets/img/neyimvar-bg.webp') no-repeat center center;
-  background-size: cover;
+    flex: 1;
+    position: relative;
+    background: url('https://www.mhrs.gov.tr/Vatandas/assets/img/neyimvar-bg.webp') no-repeat center center;
+    background-size: cover;
 }
 
 .custom-card {
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  width: 80%;
-  max-width: 450px;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 450px;
 }
 
+/* Diðer */
 .right-overlay {
-  background-color: rgba(0, 0, 0, 0.4);
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .right-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  text-align: center;
-  z-index: 10;
-  width: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    z-index: 10;
+    width: 80%;
 }
 
-.right-content h1 {
-  font-size: 3rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
+    .right-content h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .right-content p {
+        font-size: 1.2rem;
+    }
+
+/* Odaklanma */
+.btn:focus, .btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #4A90E2;
 }
 
-.right-content p {
-  font-size: 1.2rem;
+/* Genel yazý fontu */
+body, html, h1, h2, h3, h4, h5, h6, p, a, span, button, input, label, .btn, .form-control, .nav-link, .navbar-brand {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    font-size: 16px !important;
+    font-weight: normal !important;
 }
 
-/* Button styles */
-.btn-login, .btn-update {
-  background-color: #0277bd;
-  color: white;
-  font-weight: 600;
+h1 {
+    font-size: 2.5rem !important;
+    font-weight: 700 !important;
 }
 
-.btn-login:hover, .btn-update:hover {
-  background-color: #015b8e;
-  color: white;
+h2 {
+    font-size: 2rem !important;
+    font-weight: 600 !important;
 }
 
-.btn-edevlet {
-  background-color: #e11a22;
-  color: #fff;
-  font-weight: 600;
+h3 {
+    font-size: 1.75rem !important;
+    font-weight: 600 !important;
+}
+.centered-wrapper {
+    height: 100vh; /* Ekranýn tamamý kadar yükseklik */
+    display: flex;
+    justify-content: center; /* Yatay ortala */
+    align-items: center;     /* Dikey ortala */
+    background-color: #F9F9F9;
 }
 
-.btn-edevlet:hover {
-  background-color: #c41016;
-  color: #fff;
+.centered-form-container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 500px;
 }

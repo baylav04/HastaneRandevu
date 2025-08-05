@@ -2,8 +2,6 @@
 @{
     ViewData["Title"] = "Hasta Giriş";
     Layout = "_LoggedOutLayout";
-    ViewData["RightPanelTitle"] = "NeyimVar?";
-    ViewData["RightPanelContent"] = "Şikayetlerinizi girerek muhtemel tanınızı ve gideceğiniz polikliniği öğrenerek randevu almak ister misiniz?";
 }
 
 <h2 class="mb-4 text-center">Hasta Giriş</h2>
@@ -27,6 +25,11 @@
         <span asp-validation-for="Parola" class="text-danger"></span>
     </div>
 
+    <!-- reCAPTCHA widget -->
+    <div class="mb-3">
+        <div class="g-recaptcha" data-sitekey="6Lc3XpsrAAAAAP2Dx6TRfbE5EF96mu3d6fwo8MI-"></div>
+    </div>
+
     <button type="submit" class="btn btn-login w-100">Giriş Yap</button>
 </form>
 
@@ -41,3 +44,7 @@
         e-Devlet ile Giriş Yap
     </button>
 </div>
+
+@section Scripts {
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+}

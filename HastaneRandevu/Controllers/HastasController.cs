@@ -9,7 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace HastaneRandevu.Controllers
 {
@@ -250,6 +252,24 @@ namespace HastaneRandevu.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(Hasta model)
         {
+            // 1. reCAPTCHA kontrolü
+            var captchaResponse = Request.Form["g-recaptcha-response"];
+            using var client = new HttpClient();
+            var secretKey = "6Lc3XpsrAAAAALTf1A_PmGCOptRkHal7cx3Hohg_";
+            var verifyResponse = await client.PostAsync(
+                $"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={captchaResponse}", null);
+
+            var responseString = await verifyResponse.Content.ReadAsStringAsync();
+            var json = JsonDocument.Parse(responseString);
+            var isSuccess = json.RootElement.GetProperty("success").GetBoolean();
+
+            if (!isSuccess)
+            {
+                ViewData["LoginError"] = "Lütfen robot olmadığınızı doğrulayın.";
+                return View(model);
+            }
+
+            // 2. Giriş bilgisi kontrolü
             if (string.IsNullOrWhiteSpace(model.Parola) || string.IsNullOrWhiteSpace(model.TCKimlikNo))
             {
                 ViewData["LoginError"] = "Lütfen tüm alanları doldurun.";
@@ -271,6 +291,7 @@ namespace HastaneRandevu.Controllers
 
             return RedirectToAction("HastaRandevulari", "Randevus", new { hastaId = hasta.Id });
         }
+
 
         // Çıkış işlemi
         public IActionResult Logout()

@@ -1,109 +1,132 @@
 ﻿@model IEnumerable<HastaneRandevu.Models.Doktor>
 
+@{
+    ViewData["Title"] = "Doktorlar";
+}
+
 <style>
-    body {
-        background: #b7986b; /* Koyu kahve */
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 0;
+
+    .full-width-container {
+        width: 100%;
+        padding: 40px 60px; /* iç kenar boşluğu */
+        box-sizing: border-box;
     }
 
-    .container {
-        background: #f5e6c8;
+    .content-box {
+        background: #ffffff;
         padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+        .header-row h1 {
+            color: #2c3e50;
+            margin: 0;
+        }
+
+    .btn-create {
+        background-color: #007BFF;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-create:hover {
+            background-color: #2b7abf;
+        }
 
     .table {
         width: 100%;
         border-collapse: collapse;
-        background-color: #f5e6c8; /* Koyu krem */
-        border-radius: 8px;
         overflow: hidden;
-        margin: 0 auto; /* Tablonun ortalanması için eklendi */
+        border-radius: 8px;
     }
 
         .table th, .table td {
-            padding: 12px;
+            padding: 14px;
             text-align: left;
-            border-top: 1px solid #b7986b; /* Koyu kahve */
+            border-top: 1px solid #e0e0e0;
         }
 
         .table th {
-            background-color: #b7986b; /* Koyu kahve başlık */
-            color: #3e2f1c; /* Koyu kahverengi yazı */
+            background-color: #ecf0f1;
+            color: #2c3e50;
             font-weight: 600;
         }
 
         .table tr:nth-child(even) {
-            background-color: #f5e6c8; /* Koyu krem */
+            background-color: #fdfdfd;
         }
 
         .table tr:nth-child(odd) {
-            background-color: #fffbe6; /* Açık krem */
+            background-color: #f7f9fa;
         }
 
         .table tr:hover {
-            background-color: #ecd9b0; /* Hover: daha açık krem */
+            background-color: #ddeefc;
         }
 
         .table a {
-            color: #3e2f1c; /* Koyu kahverengi */
+            color: #2980b9;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 500;
         }
 
             .table a:hover {
                 text-decoration: underline;
-                color: #5a4420;
+                color: #1f6391;
             }
 
-    h1 {
-        color: #3e2f1c;
-        text-align: center;
+    @@media (max-width: 768px) {
+        .full-width-container
+
+    {
+        padding: 20px;
+    }
+
+    .header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
     }
 </style>
 
-@{
-    ViewData["Title"] = "Index";
-}
+<div class="full-width-container">
+    <div class="content-box">
+        <div class="header-row">
+            <h1>@ViewData["Title"]</h1>
+            <a asp-action="Create" class="btn-create">Yeni Doktor Ekle</a>
+        </div>
 
-<h1>Index</h1>
-
-<p style="text-align: center;">
-    <a asp-action="Create">Yeni Doktor Ekle</a>
-</p>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Ad)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Poliklinik)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Ad)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Poliklinik.Id)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Düzenle</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Detay</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Sil</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Ad)</th>
+                    <th>@Html.DisplayNameFor(model => model.Poliklinik)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Ad)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Poliklinik.PoliklinikAdi)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 

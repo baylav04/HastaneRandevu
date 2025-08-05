@@ -1,41 +1,61 @@
 ﻿@model IEnumerable<HastaneRandevu.Models.Randevu>
+
 <style>
     body {
-        background: #b7986b; /* Koyu kahve */
+        background: #F9F9F9; /* Çok açık gri, modern sade arka plan */
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         margin: 0;
         padding: 0;
     }
 
     .container {
-        background: #f5e6c8; /* Koyu krem */
+        width: 90%; /* Sayfa genişliğinin %90'ı kadar geniş */
+        margin: 40px auto; /* Sayfada yatay ortalama, üstten boşluk */
+        background: white; /* Düz beyaz içerik kutusu */
         padding: 30px;
         border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Yumuşak gölge */
+        text-align: center;
+        box-sizing: border-box; /* Padding genişliğe dahil */
+    }
+
+    table.table {
+        width: 100%; /* Tablo container genişliğinde */
+        margin: 0 auto; /* Tabloyu ortala */
+        border-collapse: collapse;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        color: #2c3e50;
     }
 </style>
+
 @{
     ViewData["Title"] = "Hasta Randevuları";
 }
 
-<h2>Randevularım</h2>
+<div class="container">
+    <h1>Randevularım</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Poliklinik</th>
-            <th>Doktor</th>
-            <th>Randevu Saati</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td>@item.Poliklinik.PoliklinikAdi</td>
-                <td>@item.Doktor.Ad</td>
-                <td>@item.RandevuSaati.ToString("g")</td>
+                <th>Poliklinik</th>
+                <th>Doktor</th>
+                <th>Randevu Saati</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Poliklinik.PoliklinikAdi</td>
+                    <td>@item.Doktor.Ad</td>
+                    <td>@item.RandevuSaati.ToString("g")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

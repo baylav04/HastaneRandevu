@@ -1,59 +1,104 @@
 ﻿@model HastaneRandevu.Models.Randevu
-<style>
-    body {
-        background: #b7986b; /* Koyu kahve */
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
 
-    .container {
-        background: #f5e6c8;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-</style>
 @{
     ViewData["Title"] = "Randevu Oluştur";
 }
 
-<h1>Randevu Oluştur</h1>
+<style>
+    .centered-wrapper {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #F9F9F9;
+    }
 
-<h4>Yeni Randevu Talebi</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+    .centered-form-container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        width: 100%;
+        max-width: 500px;
+    }
+</style>
+
+<div class="centered-wrapper">
+    <div class="centered-form-container">
+        <h1>Randevu Oluştur</h1>
+
+        <h4>Yeni Randevu Talebi</h4>
+        <hr />
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Poliklinik seçimi -->
             <div class="form-group">
                 <label asp-for="PoliklinikId" class="control-label">Poliklinik</label>
-                <select asp-for="PoliklinikId" class="form-control" asp-items="ViewBag.PoliklinikId"></select>
+                <select asp-for="PoliklinikId" class="form-control" id="PoliklinikId">
+                    <option value="">Poliklinik seçiniz</option>
+                    @foreach (var poliklinik in (SelectList)ViewBag.PoliklinikId)
+                    {
+                        <option value="@poliklinik.Value">@poliklinik.Text</option>
+                    }
+                </select>
             </div>
+
+            <!-- Doktor seçimi -->
             <div class="form-group">
                 <label asp-for="DoktorId" class="control-label">Doktor</label>
-                <select asp-for="DoktorId" class="form-control" asp-items="ViewBag.DoktorId"></select>
+                <select asp-for="DoktorId" class="form-control" id="doktorlar">
+                    <option value="">Lütfen önce poliklinik seçiniz</option>
+                </select>
             </div>
-            
-            <!-- Giriş yapan hastanın ID'sini gizli alan olarak ekle -->
+
             <input type="hidden" asp-for="HastaId" value="@ViewBag.HastaId" />
-            
+
             <div class="form-group">
                 <label asp-for="RandevuSaati" class="control-label">Randevu Saati</label>
                 <input asp-for="RandevuSaati" class="form-control" type="datetime-local" />
                 <span asp-validation-for="RandevuSaati" class="text-danger"></span>
             </div>
+
             <div class="form-group mt-3">
                 <input type="submit" value="Randevu Oluştur" class="btn btn-primary" />
             </div>
         </form>
+
+        <div class="mt-3">
+            <a asp-action="HastaRandevulari" asp-route-hastaId="@ViewBag.HastaId">Randevularıma Dön</a>
+        </div>
     </div>
 </div>
 
-<div class="mt-3">
-    <a asp-action="HastaRandevulari" asp-route-hastaId="@ViewBag.HastaId">Randevularıma Dön</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#PoliklinikId').change(function () {
+                var poliklinikId = $(this).val();
+                if (poliklinikId) {
+                    $.ajax({
+                        url: '/Randevus/DoktorGetir?poliklinikId=' + poliklinikId,
+                        type: 'GET',
+                        success: function (data) {
+                            var doktorDropdown = $('#doktorlar');
+                            doktorDropdown.empty();
+                            doktorDropdown.append('<option value="">Doktor seçiniz</option>');
+                            $.each(data, function (i, doktor) {
+                                doktorDropdown.append('<option value="' + doktor.id + '">' + doktor.ad + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    $('#doktorlar').empty().append('<option value="">Lütfen önce poliklinik seçiniz</option>');
+                }
+            });
+        });
+    </script>
 }
