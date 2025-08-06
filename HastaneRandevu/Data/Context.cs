@@ -1,9 +1,11 @@
-﻿using HastaneRandevu.Models;
+﻿using HastaneRandevu.Areas.Identity.Data;
+using HastaneRandevu.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HastaneRandevu.Data
 {
-    public class Context : DbContext
+    public class Context : IdentityDbContext<HastaneRandevuUser>
     {
         public Context(DbContextOptions<Context> options) : base(options)
         {
