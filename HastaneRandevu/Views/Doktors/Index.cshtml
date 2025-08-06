@@ -102,13 +102,14 @@
 
     }
 </style>
+<div class="header-row">
+    <h1>@ViewData["Title"]</h1>
 
-<div class="full-width-container">
-    <div class="content-box">
-        <div class="header-row">
-            <h1>@ViewData["Title"]</h1>
-            <a asp-action="Create" class="btn-create">Yeni Doktor Ekle</a>
-        </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn-create">Yeni Doktor Ekle</a>
+    }
+</div>
 
         <table class="table">
             <thead>
