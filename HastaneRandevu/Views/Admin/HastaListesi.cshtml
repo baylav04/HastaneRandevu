@@ -1,0 +1,95 @@
+﻿@model IEnumerable<HastaneRandevu.Models.Hasta>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Hasta Listesi";
+}
+
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+        .header-row h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+            color: #212529;
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 16px;
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #ffffff;
+        border: 0.5px solid #dee2e6;
+    }
+
+    thead {
+        background-color: #e9ecef;
+    }
+
+        thead th {
+            padding: 6px 10px; /* Satır yüksekliği azaltıldı */
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid #000;
+        }
+
+    tbody td {
+        padding: 6px 10px; /* Satır yüksekliği azaltıldı */
+        border-bottom: 1px solid #dee2e6;
+        text-align: left;
+    }
+
+    tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+
+    /* Butonları küçültmek için */
+    .btn-sm {
+        padding: 4px 8px;
+        font-size: 13px;
+        border-radius: 4px;
+        line-height: 1.2;
+    }
+</style>
+
+<div class="header-row">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Ad Soyad</th>
+            <th>TC Kimlik No</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var hasta in Model)
+        {
+            <tr>
+                <td>@hasta.AdSoyadi</td>
+                <td>@hasta.TCKimlikNo</td>
+               
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<HastaneRandevu.Models.Hasta>
+@{
+    ViewData["Title"] = "Hasta Listesi";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="mb-4">Hasta Listesi</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Ad Soyadı</th>
+            <th>T.C. Kimlik No</th>
+            <th>Parola</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var hasta in Model)
+        {
+            <tr>
+                <td>@hasta.AdSoyadi</td>
+                <td>@hasta.TCKimlikNo</td>
+                <td>@hasta.Parola</td>
+            </tr>
+        }
+    </tbody>
+</table>

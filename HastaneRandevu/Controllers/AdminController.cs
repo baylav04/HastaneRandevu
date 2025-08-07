@@ -1,11 +1,30 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using HastaneRandevu.Models;
+using HastaneRandevu.Data;
+using System.Linq;
 
-[Authorize(Roles = "Admin")]
-public class AdminController : Controller
+namespace HastaneRandevu.Controllers
 {
-    public IActionResult Index()
+    [Authorize(Roles = "Admin")]
+    public class AdminController : Controller
     {
-        return View();
+        private readonly Context _context;
+
+        public AdminController(Context context)
+        {
+            _context = context;
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult HastaListesi()
+        {
+            var hastalar = _context.Hastalar.ToList();
+            return View(hastalar);
+        }
     }
 }
