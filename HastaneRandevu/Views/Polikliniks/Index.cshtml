@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<HastaneRandevu.Models.Poliklinik>
 
+@{
+    Layout = User.IsInRole("Admin") ? "_AdminLayout" : "_Layout";
+}
+
 <style>
    
 

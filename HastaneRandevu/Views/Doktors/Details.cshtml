@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    Layout = User.IsInRole("Admin") ? "_AdminLayout" : "_Layout";
 }
 
 <h1>Details</h1>

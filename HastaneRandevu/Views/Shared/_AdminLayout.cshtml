@@ -1,0 +1,108 @@
+@* AdminLTE tabanlý admin layout *@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<HastaneRandevu.Areas.Identity.Data.HastaneRandevuUser> SignInManager
+@inject UserManager<HastaneRandevu.Areas.Identity.Data.HastaneRandevuUser> UserManager
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+    <link rel="stylesheet" href="~/admin-lte/css/adminlte.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        /* Sidebar yazýlarýný daha okunaklý yapmak için */
+        .main-sidebar, .sidebar-dark-primary {
+            background-color: #23272b !important;
+        }
+        .nav-sidebar .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+        }
+        .nav-sidebar .nav-link.active, .nav-sidebar .nav-link:focus, .nav-sidebar .nav-link:hover {
+            background-color: #007bff !important;
+            color: #fff !important;
+        }
+        .nav-sidebar .nav-link.disabled {
+            color: #b0b8c1 !important;
+        }
+        .sidebar .brand-link {
+            color: #fff !important;
+        }
+    </style>
+    @RenderSection("Styles", required: false)
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/" class="nav-link">Siteye Dön</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <span class="nav-link">@UserManager.GetUserName(User)</span>
+                </li>
+                <li class="nav-item">
+                    <form asp-area="Identity" asp-page="/Account/Logout" method="post" id="logoutForm">
+                        <button type="submit" class="btn btn-link nav-link">Çýkýþ Yap</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <a href="/Admin" class="brand-link">
+                <span class="brand-text font-weight-light">Admin Paneli</span>
+            </a>
+            <div class="sidebar">
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <li class="nav-item">
+                            <a href="/Admin" class="nav-link">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Doktors" class="nav-link">
+                                <i class="nav-icon fas fa-user-md"></i>
+                                <p>Doktorlar</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Polikliniks" class="nav-link">
+                                <i class="nav-icon fas fa-hospital"></i>
+                                <p>Poliklinikler</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <section class="content pt-3">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+            </section>
+        </div>
+        <!-- /.content-wrapper -->
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/admin-lte/js/adminlte.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

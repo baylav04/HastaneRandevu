@@ -16,6 +16,7 @@
 </style>
 @{
     ViewData["Title"] = "Create";
+    Layout = User.IsInRole("Admin") ? "_AdminLayout" : "_Layout";
 }
 
 <h1>Create</h1>
