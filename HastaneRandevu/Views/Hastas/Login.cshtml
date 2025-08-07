@@ -16,7 +16,7 @@
 <form asp-action="Login" method="post" novalidate>
     <div class="mb-3">
         <label asp-for="TCKimlikNo" class="form-label">TC Kimlik No</label>
-        <input asp-for="TCKimlikNo" class="form-control" placeholder="TC Kimlik No" autocomplete="off" />
+        <input asp-for="TCKimlikNo" class="form-control" placeholder="TC Kimlik No" autocomplete="off" pattern="\d*" inputmode="numeric" />
         <span asp-validation-for="TCKimlikNo" class="text-danger"></span>
         <div id="tcError" class="text-danger" style="display:none; font-size: 0.875em; margin-top: 4px;"></div>
     </div>
@@ -51,6 +51,25 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <script>
+
+
+        // TC Kimlik No doğrulama kendi iç algoritması ile
+        function validateTCNo(tcNo) {
+            if (tcNo.length !== 11 || !/^\d+$/.test(tcNo)) return false;
+            let sum1 = 0, sum2 = 0;
+            for (let i = 0; i < 10; i++) {
+                if (i % 2 === 0) {
+                    sum1 += parseInt(tcNo[i], 10);
+                } else {
+                    sum2 += parseInt(tcNo[i], 10);
+                }
+            }
+            const digit10 = (sum1 * 7 - sum2) % 10;
+            const digit11 = (sum1 + sum2) % 10;
+            return digit10 === parseInt(tcNo[9], 10) && digit11 === parseInt(tcNo[10], 10);
+        }
+
+
         document.addEventListener('DOMContentLoaded', () => {
             const tcInput = document.querySelector('input[name="TCKimlikNo"]');
             const errorDiv = document.getElementById('tcError');
@@ -63,7 +82,19 @@
                     errorDiv.textContent = "Lütfen sadece rakam giriniz!";
                     errorDiv.style.display = 'block';
                     return false;
-                } else {
+                } 
+                if (val.length !== 11) {
+                    errorDiv.textContent = "TC Kimlik No 11 haneli olmalıdır!";
+                    errorDiv.style.display = 'block';
+                    return false;
+                }            
+                if (!validateTCNo(val)) {
+                    errorDiv.textContent = "Geçersiz TC Kimlik No!";
+                    errorDiv.style.display = 'block';
+                    return false;
+                }
+                
+                else {
                     errorDiv.textContent = "";
                     errorDiv.style.display = 'none';
                     return true;
