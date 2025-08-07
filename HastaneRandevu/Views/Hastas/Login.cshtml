@@ -13,11 +13,12 @@
     </div>
 }
 
-<form asp-action="Login" method="post">
+<form asp-action="Login" method="post" novalidate>
     <div class="mb-3">
         <label asp-for="TCKimlikNo" class="form-label">TC Kimlik No</label>
-        <input asp-for="TCKimlikNo" class="form-control" placeholder="TC Kimlik No" />
+        <input asp-for="TCKimlikNo" class="form-control" placeholder="TC Kimlik No" autocomplete="off" />
         <span asp-validation-for="TCKimlikNo" class="text-danger"></span>
+        <div id="tcError" class="text-danger" style="display:none; font-size: 0.875em; margin-top: 4px;"></div>
     </div>
     <div class="mb-3">
         <label asp-for="Parola" class="form-label">Parola</label>
@@ -30,7 +31,7 @@
         <div class="g-recaptcha" data-sitekey="6Lc3XpsrAAAAAP2Dx6TRfbE5EF96mu3d6fwo8MI-"></div>
     </div>
 
-    <button type="submit" class="btn btn-login w-100">Giriş Yap</button>
+    <button type="submit" class="btn btn-login w-100" id="submitBtn">Giriş Yap</button>
 </form>
 
 <div class="text-center mt-3">
@@ -46,5 +47,41 @@
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tcInput = document.querySelector('input[name="TCKimlikNo"]');
+            const errorDiv = document.getElementById('tcError');
+            const submitBtn = document.getElementById('submitBtn');
+
+            function validateTC() {
+                const val = tcInput.value;
+                // Harf veya başka karakter varsa hata
+                if (/[^0-9]/.test(val)) {
+                    errorDiv.textContent = "Lütfen sadece rakam giriniz!";
+                    errorDiv.style.display = 'block';
+                    return false;
+                } else {
+                    errorDiv.textContent = "";
+                    errorDiv.style.display = 'none';
+                    return true;
+                }
+            }
+
+            // Her inputta kontrol et
+            tcInput.addEventListener('input', () => {
+                validateTC();
+            });
+
+            // Form submit öncesi son kontrol
+            tcInput.form.addEventListener('submit', (e) => {
+                if (!validateTC()) {
+                    e.preventDefault();
+                    tcInput.focus();
+                }
+            });
+        });
+    </script>
 }
