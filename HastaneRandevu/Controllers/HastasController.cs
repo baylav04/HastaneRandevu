@@ -97,6 +97,16 @@ namespace HastaneRandevu.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,AdSoyadi,Parola,TCKimlikNo")] Hasta hasta)
         {
+            // 🔍 Aynı TC Kimlik numarası daha önce kayıtlı mı kontrol et
+            var hastaVarMi = await _context.Hastalar
+                .AnyAsync(h => h.TCKimlikNo == hasta.TCKimlikNo);
+
+            if (hastaVarMi)
+            {
+                ModelState.AddModelError("TCKimlikNo", "Bu TC Kimlik numarasıyla zaten kayıtlı bir hasta var.");
+                return View(hasta);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(hasta);

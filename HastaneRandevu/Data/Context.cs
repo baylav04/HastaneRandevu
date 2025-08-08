@@ -7,6 +7,8 @@ namespace HastaneRandevu.Data
 {
     public class Context : IdentityDbContext<HastaneRandevuUser>
     {
+        internal object SeciliBrans;
+
         public Context(DbContextOptions<Context> options) : base(options)
         {
             
@@ -33,5 +35,6 @@ namespace HastaneRandevu.Data
         public DbSet<Randevu> Randevular { get; set; }
         public DbSet<Doktor> Doktorlar { get; set; }
         public DbSet<Hasta> Hastalar { get; set; }
+        public object Branslar { get; internal set; }
     }
 }

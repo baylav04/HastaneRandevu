@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using HastaneRandevu.Validations; // Özel validasyon sınıfını çağırmak için
+using System.ComponentModel.DataAnnotations.Schema; // 🔹 Eklenmesi şart
+using Microsoft.EntityFrameworkCore; // 🔹 Index özelliği için şart
+using HastaneRandevu.Validations;
 
 namespace HastaneRandevu.Models
 {
+    [Index(nameof(TCKimlikNo), IsUnique = true)] // 🔒 Tekil olsun!
     public class Hasta
     {
         public int Id { get; set; }
@@ -19,3 +22,4 @@ namespace HastaneRandevu.Models
         public string Parola { get; set; }
     }
 }
+

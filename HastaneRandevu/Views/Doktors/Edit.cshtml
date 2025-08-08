@@ -1,40 +1,76 @@
 ﻿@model HastaneRandevu.Models.Doktor
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Doktor Düzenle";
     Layout = User.IsInRole("Admin") ? "_AdminLayout" : "_Layout";
 }
 
-<h1>Edit</h1>
-
-<h4>Doktor</h4>
+<h1>Doktor Düzenle</h1>
 <hr />
+
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="col-md-6">
+        <form asp-action="Edit" enctype="multipart/form-data" method="post">
             <input type="hidden" asp-for="Id" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="Ad" class="control-label"></label>
                 <input asp-for="Ad" class="form-control" />
                 <span asp-validation-for="Ad" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="PoliklinikId" class="control-label"></label>
                 <select asp-for="PoliklinikId" class="form-control" asp-items="ViewBag.PoliklinikId"></select>
                 <span asp-validation-for="PoliklinikId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <!-- Mevcut Fotoğraf Gösterimi -->
+            <div class="form-group mt-3">
+                <label>Mevcut Fotoğraf</label><br />
+                @if (!string.IsNullOrEmpty(Model.FotoUrl))
+                {
+                    <img src="~/images/doktorlar/@Model.FotoUrl" class="doktor-foto" alt="Doktor Fotoğrafı" />
+                }
+                else
+                {
+                    <p>Fotoğraf yok</p>
+                }
             </div>
+
+            <!-- Fotoğraf Güncelleme -->
+            <div class="form-group mt-3">
+                <label for="YeniFoto">Yeni Fotoğraf Yükle</label>
+                <input type="file" name="YeniFoto" class="form-control" accept="image/*" />
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Güncelle" class="btn btn-primary" />
+            </div>
+        </form>
+
+        <!-- Silme Butonu -->
+        <form asp-action="Delete" method="post" onsubmit="return confirm('Bu doktoru silmek istediğinize emin misiniz?');" class="mt-3">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit" class="btn btn-danger">Doktoru Sil</button>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<style>
+    .doktor-foto {
+        width: 150px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 0;
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+</style>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

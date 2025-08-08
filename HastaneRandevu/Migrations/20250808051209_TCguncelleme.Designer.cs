@@ -4,6 +4,7 @@ using HastaneRandevu.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HastaneRandevu.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20250808051209_TCguncelleme")]
+    partial class TCguncelleme
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,17 +102,8 @@ namespace HastaneRandevu.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Detaylar")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FotoUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("PoliklinikId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Unvan")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

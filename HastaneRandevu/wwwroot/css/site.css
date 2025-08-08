@@ -204,3 +204,61 @@ h3 {
     width: 100%;
     max-width: 500px;
 }
+
+<style>
+    .doktor-kart-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    .doktor-kart {
+        width: 220px;
+        text-align: center;
+        background-color: #fff;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        transition: transform 0.3s;
+    }
+
+    .doktor-kart:hover {
+        transform: translateY(-5px);
+    }
+
+    .doktor-kart img {
+        width: 100%;
+        height: 270px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+
+    .doktor-isim {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .doktor-brans {
+        font-size: 14px;
+        color: #555;
+    }
+
+    .foto-guncelle-form {
+        margin-top: 10px;
+    }
+
+    .foto-guncelle-form input[type="file"] {
+        font-size: 13px;
+    }
+
+    .btn-guncelle {
+        margin-top: 5px;
+        font-size: 13px;
+    }
+
+    .btn-sil {
+        margin-top: 8px;
+        font-size: 13px;
+    }
+</style>

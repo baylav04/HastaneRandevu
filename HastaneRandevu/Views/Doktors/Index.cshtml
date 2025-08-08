@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HastaneRandevu.Models.Doktor>
+﻿@model HastaneRandevu.Models.DoktorListViewModel
 
 @{
     ViewData["Title"] = "Doktorlar";
@@ -6,7 +6,6 @@
 }
 
 <style>
-    /* Sayfa başlığı ve buton hizalama */
     .header-row {
         display: flex;
         justify-content: space-between;
@@ -20,7 +19,6 @@
             margin: 0;
         }
 
-    /* Buton stili */
     .btn-create {
         padding: 10px 20px;
         background-color: #007bff;
@@ -35,7 +33,6 @@
             background-color: #0056b3;
         }
 
-    /* Tablo stili */
     table {
         width: 100%;
         border-collapse: collapse;
@@ -53,10 +50,35 @@
         padding: 12px 16px;
         border-bottom: 1px solid #dee2e6;
         text-align: left;
+        vertical-align: middle;
     }
 
     tr:nth-child(even) {
         background-color: #f8f9fa;
+    }
+
+    form.mb-3.d-flex.gap-2.align-items-center {
+        margin-bottom: 30px;
+    }
+
+    .form-select, .form-control {
+        min-width: 200px;
+    }
+
+    button.btn-primary {
+        height: 38px;
+    }
+
+    .doktor-foto {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 1px solid #ccc;
+    }
+
+    .btn-sm {
+        margin-right: 5px;
     }
 </style>
 
@@ -70,21 +92,77 @@
     }
 </div>
 
+<!-- Filtreleme Formu -->
+<form method="get" class="mb-3 d-flex gap-2 align-items-center">
+    <select name="brans" class="form-select w-auto" onchange="this.form.submit()">
+        <option value="">Branş Seçin</option>
+        @foreach (var brans in Model.Branslar)
+        {
+            if (brans == Model.SeciliBrans)
+            {
+                <option value="@brans" selected>@brans</option>
+            }
+            else
+            {
+                <option value="@brans">@brans</option>
+            }
+        }
+    </select>
+
+    <input type="text" name="arama" class="form-control w-auto" placeholder="Doktor Ara" value="@Model.Arama" />
+    <button type="submit" class="btn btn-primary">Ara</button>
+</form>
+
 <!-- Doktorlar Tablosu -->
 <table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.Ad)</th>
-            <th>@Html.DisplayNameFor(model => model.Poliklinik)</th>
+            <th>Fotoğraf</th>
+            <th>Ad</th>
+            <th>Poliklinik</th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th>İşlemler</th>
+            }
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var doktor in Model.Doktorlar)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.Ad)</td>
-                <td>@Html.DisplayFor(modelItem => item.Poliklinik.PoliklinikAdi)</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(doktor.FotoUrl))
+                    {
+                        <img src="@Url.Content("~/images/doktorlar/" + doktor.FotoUrl)" class="doktor-foto" alt="@doktor.Ad" />
+                    }
+                    else
+                    {
+                        <img src="~/images/doktorlar/@doktor.FotoUrl" class="doktor-foto" alt="Fotoğraf" />
+                    }
+                </td>
+                <td>@doktor.Ad</td>
+                <td>@doktor.Poliklinik?.PoliklinikAdi</td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@doktor.Id" class="btn btn-sm btn-warning">Düzenle</a>
+
+
+                       
+                    </td>
+                }
             </tr>
         }
     </tbody>
+    <style>
+        .doktor-foto {
+            width: 150px; /* Genişlik */
+            height: 200px; /* Yükseklik */
+            object-fit: cover; /* Fotoğrafı düzgün kes */
+            border-radius: 0; /* Düz köşeler */
+            display: block;
+            margin-bottom: 10px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1); /* Hafif gölge (isteğe bağlı) */
+        }
+    </style>
 </table>

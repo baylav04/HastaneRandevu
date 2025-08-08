@@ -1,0 +1,33 @@
+﻿@model HastaneRandevu.Models.Doktor
+
+@{
+    ViewData["Title"] = "Fotoğraf Güncelle";
+    Layout = User.IsInRole("Admin") ? "_AdminLayout" : "_Layout";
+}
+
+<h2>Fotoğraf Güncelle</h2>
+
+<form asp-action="GuncelleFoto" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group mb-3">
+        <label>Mevcut Fotoğraf:</label><br />
+        @if (!string.IsNullOrEmpty(Model.FotoUrl))
+        {
+            <img src="~/images/doktorlar/@Model.FotoUrl" style="max-height:150px;" />
+        }
+        else
+        {
+            <span>Fotoğraf yok.</span>
+        }
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Yeni Fotoğraf Yükle</label>
+        <input type="file" name="yeniFoto" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Fotoğrafı Güncelle</button>
+</form>
+
+

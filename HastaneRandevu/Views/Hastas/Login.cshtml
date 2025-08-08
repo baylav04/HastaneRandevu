@@ -53,22 +53,20 @@
     <script>
 
 
-        // TC Kimlik No doğrulama kendi iç algoritması ile
-        function validateTCNo(tcNo) {
-            if (tcNo.length !== 11 || !/^\d+$/.test(tcNo)) return false;
-            let sum1 = 0, sum2 = 0;
-            for (let i = 0; i < 10; i++) {
-                if (i % 2 === 0) {
-                    sum1 += parseInt(tcNo[i], 10);
-                } else {
-                    sum2 += parseInt(tcNo[i], 10);
-                }
-            }
-            const digit10 = (sum1 * 7 - sum2) % 10;
-            const digit11 = (sum1 + sum2) % 10;
-            return digit10 === parseInt(tcNo[9], 10) && digit11 === parseInt(tcNo[10], 10);
-        }
+            function validateTCNo(tcNo) {
+            // Sayı değilse veya uzunluğu 11 değilse geçersiz
+            if (!/^[1-9][0-9]{10}$/.test(tcNo)) return false;
 
+            const digits = tcNo.split('').map(Number);
+
+            const sumOdd = digits[0] + digits[2] + digits[4] + digits[6] + digits[8];
+            const sumEven = digits[1] + digits[3] + digits[5] + digits[7];
+
+            const digit10 = ((sumOdd * 7) - sumEven) % 10;
+            const digit11 = (digits.slice(0, 10).reduce((a, b) => a + b, 0)) % 10;
+
+            return digit10 === digits[9] && digit11 === digits[10];
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             const tcInput = document.querySelector('input[name="TCKimlikNo"]');
