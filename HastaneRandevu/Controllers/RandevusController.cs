@@ -20,7 +20,6 @@ namespace HastaneRandevu.Controllers
             _context = context;
         }
 
-        // GET: Randevus
         [HastaAuthorize]
         public async Task<IActionResult> Index()
         {
@@ -34,10 +33,8 @@ namespace HastaneRandevu.Controllers
         [HastaAuthorize]
         public async Task<IActionResult> HastaRandevulari(int hastaId)
         {
-            // Session'dan giriş yapmış hasta ID'sini al
             var loggedInHastaId = HttpContext.Session.GetInt32("LoggedInHastaId");
-            
-            // Eğer farklı bir hastanın randevularına erişmeye çalışıyorsa engelle
+
             if (loggedInHastaId != hastaId)
             {
                 return RedirectToAction("Login", "Hastas");
@@ -52,7 +49,6 @@ namespace HastaneRandevu.Controllers
             return View(randevular);
         }
 
-        // GET: Randevus/Details/5
         [HastaAuthorize]
         public async Task<IActionResult> Details(int? id)
         {
@@ -71,7 +67,6 @@ namespace HastaneRandevu.Controllers
                 return NotFound();
             }
 
-            // Hastanın kendi randevusu mu kontrol et
             var loggedInHastaId = HttpContext.Session.GetInt32("LoggedInHastaId");
             if (loggedInHastaId != randevu.HastaId)
             {
@@ -80,12 +75,14 @@ namespace HastaneRandevu.Controllers
 
             return View(randevu);
         }
+
         [HttpGet]
         public JsonResult DoktorGetir(int poliklinikId)
         {
             var doktorlar = _context.Doktorlar
                 .Where(d => d.PoliklinikId == poliklinikId)
-                .Select(d => new {
+                .Select(d => new
+                {
                     d.Id,
                     d.Ad
                 })
@@ -93,17 +90,22 @@ namespace HastaneRandevu.Controllers
 
             return Json(doktorlar);
         }
+
         // GET: Randevus/Create
         [HastaAuthorize]
         public IActionResult Create()
         {
-            // Hasta ID'sini session'dan al
             var hastaId = HttpContext.Session.GetInt32("LoggedInHastaId");
 
             ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad");
-            ViewData["HastaId"] = hastaId; // Hasta ID'sini doğrudan gönder
             ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "PoliklinikAdi");
-            return View();
+
+            var model = new Randevu
+            {
+                HastaId = hastaId ?? 0
+            };
+
+            return View(model);
         }
 
         // POST: Randevus/Create
@@ -112,15 +114,12 @@ namespace HastaneRandevu.Controllers
         [HastaAuthorize]
         public async Task<IActionResult> Create([Bind("Id,PoliklinikId,DoktorId,HastaId,RandevuSaati")] Randevu randevu)
         {
-            // Hasta ID'sini session'dan al ve modele ata
             var loggedInHastaId = HttpContext.Session.GetInt32("LoggedInHastaId");
-            
-            // Form'dan gelen HastaId ile oturum açan kullanıcının ID'si eşleşmiyorsa engelle
+
             if (loggedInHastaId != randevu.HastaId)
             {
                 ModelState.AddModelError("", "Geçersiz hasta bilgisi.");
                 ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad", randevu.DoktorId);
-                ViewData["HastaId"] = loggedInHastaId;
                 ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "PoliklinikAdi", randevu.PoliklinikId);
                 return View(randevu);
             }
@@ -131,8 +130,8 @@ namespace HastaneRandevu.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("HastaRandevulari", new { hastaId = loggedInHastaId });
             }
+
             ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad", randevu.DoktorId);
-            ViewData["HastaId"] = loggedInHastaId;
             ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "PoliklinikAdi", randevu.PoliklinikId);
             return View(randevu);
         }
@@ -152,7 +151,6 @@ namespace HastaneRandevu.Controllers
                 return NotFound();
             }
 
-            // Hastanın kendi randevusu mu kontrol et
             var loggedInHastaId = HttpContext.Session.GetInt32("LoggedInHastaId");
             if (loggedInHastaId != randevu.HastaId)
             {
@@ -160,7 +158,6 @@ namespace HastaneRandevu.Controllers
             }
 
             ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad", randevu.DoktorId);
-            ViewData["HastaId"] = loggedInHastaId;
             ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "PoliklinikAdi", randevu.PoliklinikId);
             return View(randevu);
         }
@@ -176,7 +173,6 @@ namespace HastaneRandevu.Controllers
                 return NotFound();
             }
 
-            // Hastanın kendi randevusu mu kontrol et
             var loggedInHastaId = HttpContext.Session.GetInt32("LoggedInHastaId");
             if (loggedInHastaId != randevu.HastaId)
             {
@@ -203,8 +199,8 @@ namespace HastaneRandevu.Controllers
                 }
                 return RedirectToAction("HastaRandevulari", new { hastaId = loggedInHastaId });
             }
+
             ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad", randevu.DoktorId);
-            ViewData["HastaId"] = loggedInHastaId;
             ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "PoliklinikAdi", randevu.PoliklinikId);
             return View(randevu);
         }
@@ -228,7 +224,6 @@ namespace HastaneRandevu.Controllers
                 return NotFound();
             }
 
-            // Hastanın kendi randevusu mu kontrol et
             var loggedInHastaId = HttpContext.Session.GetInt32("LoggedInHastaId");
             if (loggedInHastaId != randevu.HastaId)
             {
@@ -250,7 +245,6 @@ namespace HastaneRandevu.Controllers
                 return NotFound();
             }
 
-            // Hastanın kendi randevusu mu kontrol et
             var loggedInHastaId = HttpContext.Session.GetInt32("LoggedInHastaId");
             if (loggedInHastaId != randevu.HastaId)
             {

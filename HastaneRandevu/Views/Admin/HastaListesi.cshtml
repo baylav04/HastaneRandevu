@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HastaneRandevu.Models.Hasta>
+﻿@model IEnumerable<HastaneRandevu.Models.HastaPoliklinikViewModel>
 
 @{
     Layout = "_AdminLayout";
@@ -67,24 +67,21 @@
     }
 </style>
 
-<div class="header-row">
-    <h1>@ViewData["Title"]</h1>
-</div>
-
 <table>
     <thead>
         <tr>
             <th>Ad Soyad</th>
             <th>TC Kimlik No</th>
+            <th>Poliklinikler</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var hasta in Model)
         {
             <tr>
-                <td>@hasta.AdSoyadi</td>
-                <td>@hasta.TCKimlikNo</td>
-               
+                <td>@hasta.AdSoyad</td>
+                <td>@hasta.TcNo</td>
+                <td>@string.Join(", ", hasta.Poliklinikler)</td>
             </tr>
         }
     </tbody>

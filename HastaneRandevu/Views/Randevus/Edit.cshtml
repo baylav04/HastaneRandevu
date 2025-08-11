@@ -1,10 +1,10 @@
 ﻿@model HastaneRandevu.Models.Randevu
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Düzenle";
 }
 
-<h1>Edit</h1>
+<h1>Düzenle</h1>
 
 <h4>Randevu</h4>
 <hr />
@@ -24,17 +24,12 @@
                 <span asp-validation-for="DoktorId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="HastaId" class="control-label"></label>
-                <select asp-for="HastaId" class="form-control" asp-items="ViewBag.HastaId"></select>
-                <span asp-validation-for="HastaId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="RandevuSaati" class="control-label"></label>
                 <input asp-for="RandevuSaati" class="form-control" />
                 <span asp-validation-for="RandevuSaati" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Kaydet" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -45,5 +40,37 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            $('#PoliklinikId').change(function () {
+                var poliklinikId = $(this).val();
+                if (poliklinikId) {
+                    $.ajax({
+                        url: '/Randevus/DoktorGetir?poliklinikId=' + poliklinikId,
+                        type: 'GET',
+                        success: function (data) {
+                            var doktorSelect = $('#DoktorId');
+                            doktorSelect.empty();
+                            $.each(data, function (i, doktor) {
+                                doktorSelect.append($('<option>', {
+                                    value: doktor.id,
+                                    text: doktor.ad
+                                }));
+                            });
+                        }
+                    });
+                }
+            });
+
+            // Sayfa yüklendiğinde mevcut poliklinik'e göre doktorları getir
+            var selectedPoliklinik = $('#PoliklinikId').val();
+            if (selectedPoliklinik) {
+                $('#PoliklinikId').trigger('change');
+            }
+        });
+    </script>
 }
