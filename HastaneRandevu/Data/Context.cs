@@ -25,7 +25,12 @@ namespace HastaneRandevu.Data
                 .HasOne(r => r.Poliklinik)
                 .WithMany(p => p.Randevular)
                 .HasForeignKey(r => r.PoliklinikId)
-                .OnDelete(DeleteBehavior.Restrict); // ❗️Cascade silmeyi kapattık
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // 💡 Doktor + Tarih için UNIQUE INDEX
+            modelBuilder.Entity<Randevu>()
+                .HasIndex(r => new { r.DoktorId, r.RandevuSaati })
+                .IsUnique();
 
             base.OnModelCreating(modelBuilder);
         }

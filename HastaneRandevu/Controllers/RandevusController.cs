@@ -124,6 +124,32 @@ namespace HastaneRandevu.Controllers
                 return View(randevu);
             }
 
+            // Aynı doktor ve aynı saatte randevu var mı kontrolü
+            bool doktorRandevuVarMi = await _context.Randevular.AnyAsync(r =>
+                r.DoktorId == randevu.DoktorId &&
+                r.RandevuSaati == randevu.RandevuSaati);
+
+            if (doktorRandevuVarMi)
+            {
+                ModelState.AddModelError("", "Bu saatte doktorun başka bir randevusu var.");
+                ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad", randevu.DoktorId);
+                ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "PoliklinikAdi", randevu.PoliklinikId);
+                return View(randevu);
+            }
+
+            // Aynı hasta ve aynı saatte başka bir randevusu var mı kontrolü
+            bool hastaRandevuVarMi = await _context.Randevular.AnyAsync(r =>
+                r.HastaId == randevu.HastaId &&
+                r.RandevuSaati == randevu.RandevuSaati);
+
+            if (hastaRandevuVarMi)
+            {
+                ModelState.AddModelError("", "Bu saatte zaten bir randevunuz mevcut.");
+                ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad", randevu.DoktorId);
+                ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "PoliklinikAdi", randevu.PoliklinikId);
+                return View(randevu);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(randevu);
@@ -135,6 +161,7 @@ namespace HastaneRandevu.Controllers
             ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "PoliklinikAdi", randevu.PoliklinikId);
             return View(randevu);
         }
+
 
         // GET: Randevus/Edit/5
         [HastaAuthorize]
@@ -177,6 +204,34 @@ namespace HastaneRandevu.Controllers
             if (loggedInHastaId != randevu.HastaId)
             {
                 return RedirectToAction("Login", "Hastas");
+            }
+
+            // Hasta aynı saatte başka randevusu var mı kontrolü (kendi kaydını hariç tut)
+            bool hastaAyniSaatRandevuVarMi = await _context.Randevular.AnyAsync(r =>
+                r.HastaId == randevu.HastaId &&
+                r.RandevuSaati == randevu.RandevuSaati &&
+                r.Id != randevu.Id);
+
+            if (hastaAyniSaatRandevuVarMi)
+            {
+                ModelState.AddModelError("", "Bu saatte zaten bir randevunuz mevcut. Lütfen farklı bir saat seçiniz.");
+                ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad", randevu.DoktorId);
+                ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "PoliklinikAdi", randevu.PoliklinikId);
+                return View(randevu);
+            }
+
+            // Doktorun aynı saatte başka randevusu var mı (Edit için ekleyebiliriz, istersen)
+            bool doktorAyniSaatRandevuVarMi = await _context.Randevular.AnyAsync(r =>
+                r.DoktorId == randevu.DoktorId &&
+                r.RandevuSaati == randevu.RandevuSaati &&
+                r.Id != randevu.Id);
+
+            if (doktorAyniSaatRandevuVarMi)
+            {
+                ModelState.AddModelError("", "Bu saatte doktorun başka bir randevusu var.");
+                ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad", randevu.DoktorId);
+                ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "PoliklinikAdi", randevu.PoliklinikId);
+                return View(randevu);
             }
 
             if (ModelState.IsValid)
