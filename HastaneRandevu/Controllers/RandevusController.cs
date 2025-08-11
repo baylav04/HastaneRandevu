@@ -121,8 +121,20 @@ namespace HastaneRandevu.Controllers
                 ModelState.AddModelError("", "Geçersiz hasta bilgisi.");
                 ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad", randevu.DoktorId);
                 ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "PoliklinikAdi", randevu.PoliklinikId);
+
                 return View(randevu);
             }
+
+            // Randevu saati kontrolü – 00 veya 30. dakika değilse hata
+            if (randevu.RandevuSaati.Minute % 30 != 0 || randevu.RandevuSaati.Second != 0 || randevu.RandevuSaati.Millisecond != 0)
+            {
+                ModelState.AddModelError("RandevuSaati", "Randevu saati yalnızca 30 dakikalık aralıklarla seçilmelidir (örn. 10:00, 10:30, 11:00).");
+                ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad", randevu.DoktorId);
+                ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "PoliklinikAdi", randevu.PoliklinikId);
+                return View(randevu);
+            }
+
+
 
             // Aynı doktor ve aynı saatte randevu var mı kontrolü
             bool doktorRandevuVarMi = await _context.Randevular.AnyAsync(r =>

@@ -57,7 +57,8 @@
 
             <div class="form-group">
                 <label asp-for="RandevuSaati" class="control-label">Randevu Saati</label>
-                <input asp-for="RandevuSaati" class="form-control" type="datetime-local" />
+                <input asp-for="RandevuSaati" class="form-control" type="datetime-local" step="1800" />
+
                 <span asp-validation-for="RandevuSaati" class="text-danger"></span>
             </div>
 
