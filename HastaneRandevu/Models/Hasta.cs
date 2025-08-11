@@ -20,7 +20,7 @@ namespace HastaneRandevu.Models
 
         [Required(ErrorMessage = "Parola zorunludur.")]
         public string Parola { get; set; }
-        public List<Randevu> Randevular { get; set; }
+        public List<Randevu>? Randevular { get; set; }
     }
 }
 

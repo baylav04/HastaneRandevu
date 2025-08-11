@@ -32,6 +32,9 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+            <!-- ✅ HastaId gizli olarak gönderiliyor -->
+            <input type="hidden" asp-for="HastaId" />
+
             <!-- Poliklinik seçimi -->
             <div class="form-group">
                 <label asp-for="PoliklinikId" class="control-label">Poliklinik</label>
@@ -52,8 +55,6 @@
                 </select>
             </div>
 
-            <input type="hidden" asp-for="HastaId" value="@ViewBag.HastaId" />
-
             <div class="form-group">
                 <label asp-for="RandevuSaati" class="control-label">Randevu Saati</label>
                 <input asp-for="RandevuSaati" class="form-control" type="datetime-local" />
@@ -66,15 +67,13 @@
         </form>
 
         <div class="mt-3">
-            <a asp-action="HastaRandevulari" asp-route-hastaId="@ViewBag.HastaId">Randevularıma Dön</a>
+            <a asp-action="HastaRandevulari" asp-route-hastaId="@Model.HastaId">Randevularıma Dön</a>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
