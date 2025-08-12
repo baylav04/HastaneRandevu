@@ -43,7 +43,7 @@
 
                     <p class="card-text">Mail gönderme sistemini kontrol amaçlıdır.</p>
 
-                    <button id="sendMailButton" class="btn btn-primary" data-url="@Url.Action("SendMail", "Admin")">Send Mail</button>
+                    <button id="sendMailButton" class="btn btn-primary" data-url="@Url.Action("SendEmail", "Admin")">Send Mail</button>
                 </div>
             </div>
 
@@ -55,31 +55,43 @@
 
 
 @section Scripts {
-    <​script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
         $(function () {
-        $('hashtag#sendMailButton').click(function () {
-        var mailData = {
-        toEmail: $('hashtag#toEmail').val(),
-        subject: $('hashtag#subject').val(),
-        message: $('hashtag#message').val()
-        };
+            $('#sendMailButton').click(function () {
+                var mailData = {
+                    toEmail: $('#toEmail').val(),
+                    subject: $('#subject').val(),
+                    message: $('#message').val()
+                };
 
-        $.ajax({
-        url: $(this).data('url'),
-        type: 'POST',
-        data: mailData,
-        success: function (result) {
-        // clean fields
-        $('hashtag#toEmail').val('');
-        $('hashtag#subject').val('');
-        $('hashtag#message').val('');
-        },
-        error: function (xhr, status, error) {
-        // Handle the error response here
-        }
+                $.ajax({
+                    url: $(this).data('url'),
+                    type: 'POST',
+                    data: mailData,
+                    success: function (result) {
+                        // clean fields
+                        $('#toEmail').val('');
+                        $('#subject').val('');
+                        $('#message').val('');
+                        if(result && result.toastType && result.toastMessage) {
+                            Swal.fire({
+                                icon: result.toastType,
+                                title: result.toastType === 'success' ? 'Başarılı' : 'Hata',
+                                text: result.toastMessage
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata',
+                            text: 'Mail gönderilemedi!'
+                        });
+                    }
+                });
+            });
         });
-        });
-        });
-     </​script>
+    </script>
 }
 

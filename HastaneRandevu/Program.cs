@@ -1,18 +1,20 @@
-using HastaneRandevu.Data;
-using Microsoft.EntityFrameworkCore;
+using AspNetCoreHero.ToastNotification;
 using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using HastaneRandevu.Areas.Identity.Data;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Mvc;
+using HastaneRandevu.Areas.Identity.Data;
+using HastaneRandevu.Data;
 using HastaneRandevu.Middlewares;
 using HastaneRandevu.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Email servisi kaydı
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, EmailService>();
 
 // Veritabanı bağlantısı
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -32,6 +34,13 @@ builder.Services.AddDefaultIdentity<HastaneRandevuUser>(options =>
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddNotyf(config =>
+{
+    config.DurationInSeconds = 5;
+    config.IsDismissable = true;
+    config.Position = NotyfPosition.BottomRight;
+});
 
 // Session ve Cache
 builder.Services.AddDistributedMemoryCache();

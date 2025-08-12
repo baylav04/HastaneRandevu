@@ -1,10 +1,11 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace HastaneRandevu.Services
 {
-    public class EmailService : IEmailService
+    public class EmailService : IEmailService, IEmailSender
     {
         private readonly IConfiguration _configuration;
 
@@ -34,6 +35,12 @@ namespace HastaneRandevu.Services
             };
 
             await client.SendMailAsync(mail);
+        }
+
+        // IEmailSender implementation for Identity
+        async Task IEmailSender.SendEmailAsync(string email, string subject, string htmlMessage)
+        {
+            await SendEmailAsync(email, subject, htmlMessage);
         }
     }
 }

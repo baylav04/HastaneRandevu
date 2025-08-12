@@ -6,19 +6,22 @@ using HastaneRandevu.Data;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace HastaneRandevu.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
+        private readonly INotyfService _toastNotification;
         private readonly IEmailSender _emailSender;
         private readonly Context _context;
 
-        public AdminController(Context context, IEmailSender emailSender)
+        public AdminController(Context context, IEmailSender emailSender, INotyfService notyfService)
         {
             _context = context;
             _emailSender = emailSender;
+            _toastNotification = notyfService;
         }
 
         public IActionResult Index()
@@ -51,21 +54,21 @@ namespace HastaneRandevu.Controllers
         [HttpPost]
         public async Task<IActionResult> SendEmail(string toEmail, string subject, string message)
         {
-            if (string.IsNullOrEmpty(toEmail) || string.IsNullOrEmpty(subject) || string.IsNullOrEmpty(message))
-            {
-                ModelState.AddModelError("", "Lütfen tüm alanları doldurun.");
-                return View("Index");
-            }
             try
             {
+                if (string.IsNullOrEmpty(toEmail))
+                {
+                    return Json(new { success = false, toastType = "error", toastMessage = "Mail alıcı adresi boş olamaz." });
+                }
+
                 await _emailSender.SendEmailAsync(toEmail, subject, message);
-                ViewBag.SuccessMessage = "E-posta başarıyla gönderildi.";
+
+                return Json(new { success = true, toastType = "success", toastMessage = $"Mail {toEmail} adresine gönderildi" });
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", $"E-posta gönderilirken bir hata oluştu: {ex.Message}");
+                return Json(new { success = false, toastType = "error", toastMessage = $"Mail gönderilirken hata oluştu: {ex.Message}" });
             }
-            return View("Index");
         }
     }
 }
