@@ -12,7 +12,7 @@
 
         public string? FotoUrl { get; set; } 
 
-        public string? Detaylar { get; set; } // EKLENDİ
+        public string? Detaylar { get; set; } 
 
         public int PoliklinikId { get; set; }
 
