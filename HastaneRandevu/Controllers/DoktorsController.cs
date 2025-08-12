@@ -15,7 +15,7 @@ namespace HastaneRandevu.Controllers
     public class DoktorsController : Controller
     {
         private readonly Context _context;
-
+     
         public DoktorsController(Context context)
         {
             _context = context;

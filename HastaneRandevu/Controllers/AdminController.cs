@@ -4,17 +4,21 @@ using Microsoft.EntityFrameworkCore;
 using HastaneRandevu.Models;
 using HastaneRandevu.Data;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace HastaneRandevu.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
+        private readonly IEmailSender _emailSender;
         private readonly Context _context;
 
-        public AdminController(Context context)
+        public AdminController(Context context, IEmailSender emailSender)
         {
             _context = context;
+            _emailSender = emailSender;
         }
 
         public IActionResult Index()
@@ -42,6 +46,26 @@ namespace HastaneRandevu.Controllers
             }).ToList();
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendEmail(string toEmail, string subject, string message)
+        {
+            if (string.IsNullOrEmpty(toEmail) || string.IsNullOrEmpty(subject) || string.IsNullOrEmpty(message))
+            {
+                ModelState.AddModelError("", "Lütfen tüm alanları doldurun.");
+                return View("Index");
+            }
+            try
+            {
+                await _emailSender.SendEmailAsync(toEmail, subject, message);
+                ViewBag.SuccessMessage = "E-posta başarıyla gönderildi.";
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"E-posta gönderilirken bir hata oluştu: {ex.Message}");
+            }
+            return View("Index");
         }
     }
 }

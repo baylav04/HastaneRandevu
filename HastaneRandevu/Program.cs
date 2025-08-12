@@ -3,25 +3,37 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using HastaneRandevu.Areas.Identity.Data;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using HastaneRandevu.Middlewares;
+using HastaneRandevu.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                      ?? throw new ArgumentNullException(nameof(args));
+// Email servisi kaydı
+builder.Services.AddScoped<IEmailService, EmailService>();
 
-// Context, IdentityDbContext'ten türediği için hem kimlik hem uygulama verilerini tutar
+// Veritabanı bağlantısı
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                      ?? throw new ArgumentNullException("DefaultConnection yok!");
+
+// DbContext kaydı
 builder.Services.AddDbContext<Context>(options =>
     options.UseSqlServer(connectionString));
 
+// Identity yapılandırması
 builder.Services.AddDefaultIdentity<HastaneRandevuUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = true;
 })
-.AddRoles<IdentityRole>() // Rol desteği
+.AddRoles<IdentityRole>() // Rol desteği ekle
 .AddEntityFrameworkStores<Context>();
 
+// AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
 
+// Session ve Cache
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -30,11 +42,38 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// FluentValidation
 builder.Services.AddControllersWithViews();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+// API Validation hata formatı
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(e => e.Value.Errors.Count > 0)
+            .Select(e => new
+            {
+                Field = e.Key,
+                Errors = e.Value.Errors.Select(x => x.ErrorMessage)
+            });
+
+        return new BadRequestObjectResult(new
+        {
+            Message = "Validation failed",
+            Errors = errors
+        });
+    };
+});
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
+// Ortam kontrolü
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -43,22 +82,30 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Middleware’ler
+app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseRouting();
-app.UseAuthentication(); // <- EKLENMESİ GEREKİR
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 
+// Route’lar
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+// Rol ve admin kullanıcı seed işlemi
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = services.GetRequiredService<UserManager<HastaneRandevuUser>>();
 
-    SeedAdminUserAndRoleAsync(userManager, roleManager).GetAwaiter().GetResult();
+    await SeedAdminUserAndRoleAsync(userManager, roleManager);
 }
 
 async Task SeedAdminUserAndRoleAsync(UserManager<HastaneRandevuUser> userManager, RoleManager<IdentityRole> roleManager)
@@ -67,11 +114,11 @@ async Task SeedAdminUserAndRoleAsync(UserManager<HastaneRandevuUser> userManager
     const string adminEmail = "admin@admin.com";
     const string adminPassword = "Admin123!";
 
-    // Rolü oluştur
+    // Admin rolü yoksa oluştur
     if (!await roleManager.RoleExistsAsync(adminRoleName))
         await roleManager.CreateAsync(new IdentityRole(adminRoleName));
 
-    // Admin kullanıcısını bul ya da oluştur
+    // Admin kullanıcı yoksa oluştur
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
     if (adminUser == null)
     {
@@ -84,12 +131,13 @@ async Task SeedAdminUserAndRoleAsync(UserManager<HastaneRandevuUser> userManager
 
         var result = await userManager.CreateAsync(adminUser, adminPassword);
         if (!result.Succeeded)
-            throw new Exception("Admin kullanıcısı oluşturulamadı.");
+            throw new Exception("Admin kullanıcısı oluşturulamadı: " + string.Join(", ", result.Errors.Select(e => e.Description)));
     }
 
-    // Kullanıcıyı Admin rolüne ata
+    // Kullanıcı admin rolünde değilse ekle
     if (!await userManager.IsInRoleAsync(adminUser, adminRoleName))
         await userManager.AddToRoleAsync(adminUser, adminRoleName);
 }
+
 app.Run();
 

@@ -1,4 +1,4 @@
-@{
+﻿@{
     Layout = "_AdminLayout";
     ViewData["Title"] = "Admin Panel";
 }
@@ -14,7 +14,72 @@
 </div>
 <div class="card">
     <div class="card-body">
-        <p>Bu sayfaya yaln�zca Admin rol�ndeki kullan�c�lar eri�ebilir.</p>
+        <p>Bu sayfaya yalnızca Admin rolündeki kullanıcılar erişebilir.</p>
         
+        <div class="col-lg-6">
+
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h5 class="m-0">Mail Denemesi</h5>
+                </div>
+                <div class="card-body">
+
+
+                    <div class="form-group">
+                        <label for="toEmail">Mail Alıcısı</label>
+                        <input type="text" name="toEmail" id="toEmail" class="form-control mb-3" placeholder="Mail Alıcısı">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Mail Başlığı</label>
+                        <input type="text" name="subject" id="subject" class="form-control mb-3" placeholder="Mail Başlığı">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Mail İçeriği</label>
+                        <textarea name="message" id="message" class="form-control mb-3" placeholder="Mail İçeriği"></textarea>
+                    </div>
+
+
+                    <p class="card-text">Mail gönderme sistemini kontrol amaçlıdır.</p>
+
+                    <button id="sendMailButton" class="btn btn-primary" data-url="@Url.Action("SendMail", "Admin")">Send Mail</button>
+                </div>
+            </div>
+
+        </div>
+
+
     </div>
 </div>
+
+
+@section Scripts {
+    <​script>
+        $(function () {
+        $('hashtag#sendMailButton').click(function () {
+        var mailData = {
+        toEmail: $('hashtag#toEmail').val(),
+        subject: $('hashtag#subject').val(),
+        message: $('hashtag#message').val()
+        };
+
+        $.ajax({
+        url: $(this).data('url'),
+        type: 'POST',
+        data: mailData,
+        success: function (result) {
+        // clean fields
+        $('hashtag#toEmail').val('');
+        $('hashtag#subject').val('');
+        $('hashtag#message').val('');
+        },
+        error: function (xhr, status, error) {
+        // Handle the error response here
+        }
+        });
+        });
+        });
+     </​script>
+}
+
