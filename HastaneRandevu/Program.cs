@@ -2,19 +2,22 @@ using AspNetCoreHero.ToastNotification;
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Hangfire;
+using Hangfire.SqlServer;
 using HastaneRandevu.Areas.Identity.Data;
 using HastaneRandevu.Data;
 using HastaneRandevu.Middlewares;
 using HastaneRandevu.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Email servisi kaydı
+// Email servisi kaydı (SmtpEmailSender kaldırıldı, sadece EmailService var)
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, EmailService>();
+builder.Services.AddScoped<IEmailSender, EmailService>();
 
 // Veritabanı bağlantısı
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -29,12 +32,13 @@ builder.Services.AddDefaultIdentity<HastaneRandevuUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = true;
 })
-.AddRoles<IdentityRole>() // Rol desteği ekle
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<Context>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
 
+// Toast Notification
 builder.Services.AddNotyf(config =>
 {
     config.DurationInSeconds = 5;
@@ -80,6 +84,14 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 builder.Services.AddRazorPages();
 
+// Hangfire servisleri
+builder.Services.AddHangfire(cfg =>
+    cfg.UseSqlServerStorage(connectionString));
+builder.Services.AddHangfireServer();
+
+// Randevu hatırlatma işi
+builder.Services.AddScoped<RandevuHatirlatmaJob>();
+
 var app = builder.Build();
 
 // Ortam kontrolü
@@ -101,13 +113,16 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 
+// Hangfire dashboard (isteğe göre sadece admin’e aç)
+app.UseHangfireDashboard("/hangfire");
+
 // Route’lar
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-//Initialize
+// Initialize
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<Context>();
@@ -130,11 +145,9 @@ async Task SeedAdminUserAndRoleAsync(UserManager<HastaneRandevuUser> userManager
     const string adminEmail = "admin@admin.com";
     const string adminPassword = "Admin123!";
 
-    // Admin rolü yoksa oluştur
     if (!await roleManager.RoleExistsAsync(adminRoleName))
         await roleManager.CreateAsync(new IdentityRole(adminRoleName));
 
-    // Admin kullanıcı yoksa oluştur
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
     if (adminUser == null)
     {
@@ -150,10 +163,17 @@ async Task SeedAdminUserAndRoleAsync(UserManager<HastaneRandevuUser> userManager
             throw new Exception("Admin kullanıcısı oluşturulamadı: " + string.Join(", ", result.Errors.Select(e => e.Description)));
     }
 
-    // Kullanıcı admin rolünde değilse ekle
     if (!await userManager.IsInRoleAsync(adminUser, adminRoleName))
         await userManager.AddToRoleAsync(adminUser, adminRoleName);
 }
 
+// Hangfire tekrarlayan iş planlama
+RecurringJob.AddOrUpdate<RandevuHatirlatmaJob>(
+    "randevu-hatirlat",
+    job => job.GonderAsync(),
+    "0 * * * *"
+);
+
 app.Run();
+
 

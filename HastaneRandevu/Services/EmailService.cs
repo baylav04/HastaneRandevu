@@ -23,11 +23,12 @@ namespace HastaneRandevu.Services
             var pass = smtpSettings["Password"];
             var enableSsl = bool.Parse(smtpSettings["EnableSSL"]);
 
-            using var client = new SmtpClient(host, port)
-            {
-                Credentials = new NetworkCredential(user, pass),
-                EnableSsl = enableSsl
-            };
+            using var client = new SmtpClient(host, port);
+            client.UseDefaultCredentials = false;
+            client.Credentials = new NetworkCredential(user, pass);
+            client.EnableSsl = enableSsl; // Config'deki EnableSSL değerini kullan
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+
 
             var mail = new MailMessage(user, toEmail, subject, htmlMessage)
             {

@@ -95,9 +95,8 @@ namespace HastaneRandevu.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AdSoyadi,Parola,TCKimlikNo")] Hasta hasta)
+        public async Task<IActionResult> Create([Bind("Id,AdSoyadi,Parola,TCKimlikNo,Email")] Hasta hasta)
         {
-            // 🔍 Aynı TC Kimlik numarası daha önce kayıtlı mı kontrol et
             var hastaVarMi = await _context.Hastalar
                 .AnyAsync(h => h.TCKimlikNo == hasta.TCKimlikNo);
 
@@ -138,7 +137,7 @@ namespace HastaneRandevu.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [HastaAuthorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AdSoyadi,Parola,TCKimlikNo")] Hasta hasta)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AdSoyadi,Parola,TCKimlikNo,Email")] Hasta hasta)
         {
             if (id != hasta.Id)
                 return NotFound();
@@ -196,7 +195,7 @@ namespace HastaneRandevu.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(Hasta model)
         {
-            // 1. reCAPTCHA kontrolü
+            // reCAPTCHA kontrolü
             var captchaResponse = Request.Form["g-recaptcha-response"];
             using var client = new HttpClient();
             var secretKey = "6Lc3XpsrAAAAALTf1A_PmGCOptRkHal7cx3Hohg_"; // kendi anahtarını koy
@@ -213,7 +212,6 @@ namespace HastaneRandevu.Controllers
                 return View(model);
             }
 
-            // 2. Kullanıcı bilgisi kontrolü
             if (string.IsNullOrWhiteSpace(model.Parola) || string.IsNullOrWhiteSpace(model.TCKimlikNo))
             {
                 ViewData["LoginError"] = "Lütfen tüm alanları doldurun.";
@@ -229,7 +227,6 @@ namespace HastaneRandevu.Controllers
                 return View(model);
             }
 
-            // 3. Oturum bilgilerini kaydet
             HttpContext.Session.SetInt32("LoggedInHastaId", hasta.Id);
             HttpContext.Session.SetString("LoggedInHastaName", hasta.AdSoyadi);
 
@@ -238,10 +235,7 @@ namespace HastaneRandevu.Controllers
 
         public IActionResult Logout()
         {
-            // Hasta oturumunu temizle
             HttpContext.Session.Clear();
-
-            // Eğer admin girişi varsa etkilenmez (Identity ayrı)
             return RedirectToAction("Index", "Home");
         }
 
