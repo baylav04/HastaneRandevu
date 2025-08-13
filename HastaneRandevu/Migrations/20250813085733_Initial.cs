@@ -58,7 +58,8 @@ namespace HastaneRandevu.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AdSoyadi = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TCKimlikNo = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
-                    Parola = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Parola = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

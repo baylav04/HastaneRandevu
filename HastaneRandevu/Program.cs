@@ -107,6 +107,13 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
+//Initialize
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<Context>();
+    InitializeDatabase.Initialize(context);
+}
+
 // Rol ve admin kullanıcı seed işlemi
 using (var scope = app.Services.CreateScope())
 {

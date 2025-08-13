@@ -21,6 +21,8 @@ namespace HastaneRandevu.Models
         [Required(ErrorMessage = "Parola zorunludur.")]
         public string Parola { get; set; }
         public List<Randevu>? Randevular { get; set; }
+        [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
+        public string? Email { get; set; }
     }
 }
 

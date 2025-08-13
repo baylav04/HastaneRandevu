@@ -43,8 +43,8 @@ namespace HastaneRandevu.Data
             if (!context.Hastalar.Any())
             {
                 context.Hastalar.AddRange(
-                    new Hasta { AdSoyadi = "Ali Veli", Parola = "aliveli", TCKimlikNo = "12345678901"},
-                    new Hasta { AdSoyadi = "Ayşe Fatma", Parola = "aysefatma", TCKimlikNo = "10987654321"}
+                    new Hasta { AdSoyadi = "Ali Veli", Parola = "aliveli", TCKimlikNo = "12345678901", Email = "baylavkadriye@gmail.com" },
+                    new Hasta { AdSoyadi = "Ayşe Fatma", Parola = "aysefatma", TCKimlikNo = "10987654321", Email = "ayse@mail.com" }
                 );
                 context.SaveChanges();
             }

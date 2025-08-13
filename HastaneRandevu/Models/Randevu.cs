@@ -21,6 +21,7 @@ namespace HastaneRandevu.Models
         [Required(ErrorMessage = "Randevu saati seçilmelidir.")]
         [DataType(DataType.DateTime)]
         public DateTime RandevuSaati { get; set; }
+        
     }
 }
 
