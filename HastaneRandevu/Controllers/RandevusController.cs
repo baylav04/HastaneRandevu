@@ -49,6 +49,42 @@ namespace HastaneRandevu.Controllers
             return View(randevular);
         }
 
+        // --- DÜZENLENMİŞ METOD ---
+        [HastaAuthorize]
+        public async Task<IActionResult> AktifVeGecmisRandevular()
+        {
+            var loggedInHastaId = HttpContext.Session.GetInt32("LoggedInHastaId");
+            if (loggedInHastaId == null)
+            {
+                return RedirectToAction("Login", "Hastas");
+            }
+
+            var simdikiZaman = DateTime.Now;
+
+            var aktifRandevular = await _context.Randevular
+                .Include(r => r.Poliklinik)
+                .Include(r => r.Doktor)
+                .Where(r => r.HastaId == loggedInHastaId && r.RandevuSaati >= simdikiZaman)
+                .OrderBy(r => r.RandevuSaati)
+                .ToListAsync();
+
+            var gecmisRandevular = await _context.Randevular
+                .Include(r => r.Poliklinik)
+                .Include(r => r.Doktor)
+                .Where(r => r.HastaId == loggedInHastaId && r.RandevuSaati < simdikiZaman)
+                .OrderByDescending(r => r.RandevuSaati)
+                .ToListAsync();
+
+            var model = new AktifGecmisRandevuViewModel
+            {
+                AktifRandevular = aktifRandevular,
+                GecmisRandevular = gecmisRandevular
+            };
+
+            return View(model);
+        }
+        // --- METOD SONU ---
+
         [HastaAuthorize]
         public async Task<IActionResult> Details(int? id)
         {
@@ -91,7 +127,6 @@ namespace HastaneRandevu.Controllers
             return Json(doktorlar);
         }
 
-        // GET: Randevus/Create
         [HastaAuthorize]
         public IActionResult Create()
         {
@@ -108,7 +143,6 @@ namespace HastaneRandevu.Controllers
             return View(model);
         }
 
-        // POST: Randevus/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [HastaAuthorize]
@@ -125,7 +159,6 @@ namespace HastaneRandevu.Controllers
                 return View(randevu);
             }
 
-            // Randevu saati kontrolü – 00 veya 30. dakika değilse hata
             if (randevu.RandevuSaati.Minute % 30 != 0 || randevu.RandevuSaati.Second != 0 || randevu.RandevuSaati.Millisecond != 0)
             {
                 ModelState.AddModelError("RandevuSaati", "Randevu saati yalnızca 30 dakikalık aralıklarla seçilmelidir (örn. 10:00, 10:30, 11:00).");
@@ -134,9 +167,6 @@ namespace HastaneRandevu.Controllers
                 return View(randevu);
             }
 
-
-
-            // Aynı doktor ve aynı saatte randevu var mı kontrolü
             bool doktorRandevuVarMi = await _context.Randevular.AnyAsync(r =>
                 r.DoktorId == randevu.DoktorId &&
                 r.RandevuSaati == randevu.RandevuSaati);
@@ -149,7 +179,6 @@ namespace HastaneRandevu.Controllers
                 return View(randevu);
             }
 
-            // Aynı hasta ve aynı saatte başka bir randevusu var mı kontrolü
             bool hastaRandevuVarMi = await _context.Randevular.AnyAsync(r =>
                 r.HastaId == randevu.HastaId &&
                 r.RandevuSaati == randevu.RandevuSaati);
@@ -166,7 +195,7 @@ namespace HastaneRandevu.Controllers
             {
                 _context.Add(randevu);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("HastaRandevulari", new { hastaId = loggedInHastaId });
+                return RedirectToAction("AktifVeGecmisRandevular");
             }
 
             ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad", randevu.DoktorId);
@@ -174,8 +203,6 @@ namespace HastaneRandevu.Controllers
             return View(randevu);
         }
 
-
-        // GET: Randevus/Edit/5
         [HastaAuthorize]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -201,7 +228,6 @@ namespace HastaneRandevu.Controllers
             return View(randevu);
         }
 
-        // POST: Randevus/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [HastaAuthorize]
@@ -218,7 +244,6 @@ namespace HastaneRandevu.Controllers
                 return RedirectToAction("Login", "Hastas");
             }
 
-            // Hasta aynı saatte başka randevusu var mı kontrolü (kendi kaydını hariç tut)
             bool hastaAyniSaatRandevuVarMi = await _context.Randevular.AnyAsync(r =>
                 r.HastaId == randevu.HastaId &&
                 r.RandevuSaati == randevu.RandevuSaati &&
@@ -232,7 +257,6 @@ namespace HastaneRandevu.Controllers
                 return View(randevu);
             }
 
-            // Doktorun aynı saatte başka randevusu var mı (Edit için ekleyebiliriz, istersen)
             bool doktorAyniSaatRandevuVarMi = await _context.Randevular.AnyAsync(r =>
                 r.DoktorId == randevu.DoktorId &&
                 r.RandevuSaati == randevu.RandevuSaati &&
@@ -240,7 +264,7 @@ namespace HastaneRandevu.Controllers
 
             if (doktorAyniSaatRandevuVarMi)
             {
-                ModelState.AddModelError("", "Bu saatte doktorun başka bir randevusu var.");
+                ModelState.AddModelError("", "Bu saatte doktorun başka bir randevusu var. Lütfen farklı bir saat seçiniz.");
                 ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad", randevu.DoktorId);
                 ViewData["PoliklinikId"] = new SelectList(_context.Poliklinikler, "Id", "PoliklinikAdi", randevu.PoliklinikId);
                 return View(randevu);
@@ -264,7 +288,7 @@ namespace HastaneRandevu.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("HastaRandevulari", new { hastaId = loggedInHastaId });
+                return RedirectToAction("AktifVeGecmisRandevular");
             }
 
             ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Ad", randevu.DoktorId);
@@ -272,7 +296,6 @@ namespace HastaneRandevu.Controllers
             return View(randevu);
         }
 
-        // GET: Randevus/Delete/5
         [HastaAuthorize]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -300,27 +323,21 @@ namespace HastaneRandevu.Controllers
             return View(randevu);
         }
 
-        // POST: Randevus/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [HastaAuthorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var randevu = await _context.Randevular.FindAsync(id);
-            if (randevu == null)
-            {
-                return NotFound();
-            }
-
             var loggedInHastaId = HttpContext.Session.GetInt32("LoggedInHastaId");
-            if (loggedInHastaId != randevu.HastaId)
+            if (randevu.HastaId != loggedInHastaId)
             {
                 return RedirectToAction("Login", "Hastas");
             }
 
             _context.Randevular.Remove(randevu);
             await _context.SaveChangesAsync();
-            return RedirectToAction("HastaRandevulari", new { hastaId = loggedInHastaId });
+            return RedirectToAction("AktifVeGecmisRandevular");
         }
 
         private bool RandevuExists(int id)
@@ -329,4 +346,8 @@ namespace HastaneRandevu.Controllers
         }
     }
 }
+
+
+
+
 

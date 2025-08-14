@@ -230,7 +230,7 @@ namespace HastaneRandevu.Controllers
             HttpContext.Session.SetInt32("LoggedInHastaId", hasta.Id);
             HttpContext.Session.SetString("LoggedInHastaName", hasta.AdSoyadi);
 
-            return RedirectToAction("HastaRandevulari", "Randevus", new { hastaId = hasta.Id });
+            return RedirectToAction("Index", "Home", new { hastaId = hasta.Id });
         }
 
         public IActionResult Logout()

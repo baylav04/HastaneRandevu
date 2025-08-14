@@ -1,0 +1,88 @@
+﻿@model AktifGecmisRandevuViewModel
+
+@{
+    ViewData["Title"] = "Randevularım";
+}
+
+<h2>Randevularım</h2>
+
+<ul class="nav nav-tabs" id="randevuTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="aktif-tab" data-bs-toggle="tab" data-bs-target="#aktif" type="button" role="tab">
+            Aktif Randevular
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="gecmis-tab" data-bs-toggle="tab" data-bs-target="#gecmis" type="button" role="tab">
+            Geçmiş Randevular
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content mt-3" id="randevuTabsContent">
+    <!-- Aktif Randevular -->
+    <div class="tab-pane fade show active" id="aktif" role="tabpanel">
+        @if (Model.AktifRandevular.Any())
+        {
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Poliklinik</th>
+                        <th>Doktor</th>
+                        <th>Tarih</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model.AktifRandevular)
+                    {
+                        <tr>
+                            <td>@r.Poliklinik.PoliklinikAdi</td>
+                            <td>@r.Doktor.Ad</td>
+                            <td>@r.RandevuSaati.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@r.Id" class="btn btn-sm btn-warning">Düzenle</a>
+                                <a asp-action="Delete" asp-route-id="@r.Id" class="btn btn-sm btn-danger">İptal Et</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-muted">Aktif randevunuz bulunmamaktadır.</p>
+        }
+    </div>
+
+    <!-- Geçmiş Randevular -->
+    <div class="tab-pane fade" id="gecmis" role="tabpanel">
+        @if (Model.GecmisRandevular.Any())
+        {
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Poliklinik</th>
+                        <th>Doktor</th>
+                        <th>Tarih</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model.GecmisRandevular)
+                    {
+                        <tr>
+                            <td>@r.Poliklinik.PoliklinikAdi</td>
+                            <td>@r.Doktor.Ad</td>
+                            <td>@r.RandevuSaati.ToString("dd.MM.yyyy HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-muted">Geçmiş randevunuz bulunmamaktadır.</p>
+        }
+    </div>
+</div>
+
