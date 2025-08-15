@@ -28,11 +28,10 @@ namespace HastaneRandevu.Data
             base.OnModelCreating(modelBuilder);
         }
 
+        // DbSet’ler
         public DbSet<Poliklinik> Poliklinikler { get; set; }
-        public DbSet<Randevu> Randevular { get; set; }
+        public DbSet<Randevu> Randevular { get; set; }   // ✅ Randevu tablosu
         public DbSet<Doktor> Doktorlar { get; set; }
         public DbSet<Hasta> Hastalar { get; set; }
-
-       
     }
 }

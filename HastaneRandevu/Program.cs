@@ -12,10 +12,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Email servisi kaydı (SmtpEmailSender kaldırıldı, sadece EmailService var)
+// Email servisi
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IEmailSender, EmailService>();
 
@@ -23,11 +24,11 @@ builder.Services.AddScoped<IEmailSender, EmailService>();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                       ?? throw new ArgumentNullException("DefaultConnection yok!");
 
-// DbContext kaydı
+// DbContext
 builder.Services.AddDbContext<Context>(options =>
     options.UseSqlServer(connectionString));
 
-// Identity yapılandırması
+// Identity
 builder.Services.AddDefaultIdentity<HastaneRandevuUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = true;
@@ -46,7 +47,7 @@ builder.Services.AddNotyf(config =>
     config.Position = NotyfPosition.BottomRight;
 });
 
-// Session ve Cache
+// Session & Cache
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -61,7 +62,7 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
-// API Validation hata formatı
+// API validation error format
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.InvalidModelStateResponseFactory = context =>
@@ -84,27 +85,39 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 builder.Services.AddRazorPages();
 
-// Hangfire servisleri
+// Hangfire
 builder.Services.AddHangfire(cfg =>
     cfg.UseSqlServerStorage(connectionString));
 builder.Services.AddHangfireServer();
 
-// Randevu hatırlatma işi
+// Randevu hatırlatma job
 builder.Services.AddScoped<RandevuHatirlatmaJob>();
+
+// ✅ SMS API için HttpClient
+builder.Services.AddHttpClient();
+
+// ✅ Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Ortam kontrolü
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// Middleware’ler
+// Middleware
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseRouting();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -113,23 +126,26 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 
-// Hangfire dashboard (isteğe göre sadece admin’e aç)
+// Hangfire dashboard
 app.UseHangfireDashboard("/hangfire");
 
-// Route’lar
+// ✅ API Controller’ları aktif et
+app.MapControllers();
+
+// MVC Route
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-// Initialize
+// Database init
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<Context>();
     InitializeDatabase.Initialize(context);
 }
 
-// Rol ve admin kullanıcı seed işlemi
+// Role & admin seed
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -167,7 +183,7 @@ async Task SeedAdminUserAndRoleAsync(UserManager<HastaneRandevuUser> userManager
         await userManager.AddToRoleAsync(adminUser, adminRoleName);
 }
 
-// Hangfire tekrarlayan iş planlama
+// Hangfire job schedule
 RecurringJob.AddOrUpdate<RandevuHatirlatmaJob>(
     "randevu-hatirlat",
     job => job.GonderAsync(),
@@ -175,5 +191,7 @@ RecurringJob.AddOrUpdate<RandevuHatirlatmaJob>(
 );
 
 app.Run();
+
+
 
 

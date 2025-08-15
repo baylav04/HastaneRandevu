@@ -25,6 +25,8 @@ namespace HastaneRandevu.Models
         [Required]
         public string Durum { get; set; } = "aktif";
 
+        // ✅ Yeni Eklenen Alanlar
+        public bool SmsGonderildi { get; set; } = false;
+        public bool SmsIletildi { get; set; } = false;
     }
 }
-
