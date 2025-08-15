@@ -198,7 +198,7 @@ namespace HastaneRandevu.Controllers
             // reCAPTCHA kontrolü
             var captchaResponse = Request.Form["g-recaptcha-response"];
             using var client = new HttpClient();
-            var secretKey = "6Lc3XpsrAAAAALTf1A_PmGCOptRkHal7cx3Hohg_"; // kendi anahtarını koy
+            var secretKey = ""; // kendi anahtarını koy
             var verifyResponse = await client.PostAsync(
                 $"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={captchaResponse}", null);
 

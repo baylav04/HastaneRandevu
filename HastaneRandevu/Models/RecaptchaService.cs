@@ -12,7 +12,7 @@ public class RecaptchaResponse
 
 public class RecaptchaService
 {
-    private readonly string _secretKey = "6Lc3XpsrAAAAALTf1A_PmGCOptRkHal7cx3Hohg_";
+    private readonly string _secretKey = "Buraya Kendi Anahtarınızı Giriniz";
 
     public async Task<bool> VerifyToken(string token)
     {
